@@ -6,14 +6,14 @@
 | ----------- | ---------------------- |
 | TeamID      |        Team-091        |
 | TeamName    |         flannel        |
-| Captain     |       Abdu Alawini     |
-| Captain     |  alawini@illinois.edu  |
-| Member1     |        Kevin Pei       |
-| Member1     |   kevin2@illinois.edu  |
-| Member2     |  Dattatreya Mohapatra  |
-| Member2     |   datta1@illinois.edu  |
-| Member3     |     Ti-Chung Cheng     |
-| Member3     |  tichung3@illinois.edu |
+| Captain     |       Gagan Kadadevarmath     |
+| Captain     |  gagan2@illinois.edu  |
+| Member1     |        Daniel Kaufman       |
+| Member1     |   dbk3@illinois.edu  |
+| Member2     |  Lasya Neti  |
+| Member2     |   lneti2@illinois.edu  |
+| Member3     |     Joy Wan     |
+| Member3     |  joywan2@illinois.edu |
 
 ## Project Information
 
