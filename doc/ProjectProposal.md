@@ -7,7 +7,7 @@ Our application will help users determine where and when the highest chance of a
 
 The application’s real-time feature provides users with access to a constant and continuous stream of data, allowing them to understand what is occurring in airports around America and then take that into account when planning their flights. By aggregating all of the flight details, data visualizations can be built to provide users with a rough outline of airports’ past histories with flight delays. 
 
-### Usefullness
+### Usefulness
 Our application is useful because it can allow users to know timely whether or not there is a delay in their flight, facilitating travelers the time to consider other transportation options and what steps to take as a result of the delay. Additionally, our application ensures its real-time accuracy by allowing users to add or remove data from the database, confirming or disproving the information presented in our application. Our application will also find the most reliable flight options and airport locations that have the lowest chances of delay for each user’s flight path. This allows for more time-efficient traveling, as users can feel more secure that they can avoid the most probable locations where delays will occur. 
 
 There are many existent applications that already track flight delays, such as FlightAware Flight Tracker, ID90 Travel, Flighty, or Planes Live. However, our application is different from theirs in that our data can be contributed by users. Users can add delays through our website to ensure the most up-to-date information and other users can view this information. If a delay report is inaccurate, users can also report the problem and request to have the false information removed from our database.
@@ -27,10 +27,10 @@ One of our stretch goals is to provide user authentication by allowing users to 
 ### Low-Fidelity UI Mockup
 ![](./lofi_mockup.jpg)
 ### Project Work Distribution
-Gagan: Will handle most of the frontend and help with database creation
+- Gagan: Will handle most of the frontend and help with database creation
 
-Lasya: Help with backend 
+- Lasya: Help with backend 
 
-Joy: Help with the frontend and creation of ER diagram
+- Joy: Help with the frontend and creation of ER diagram
 
-Daniel: Help with backend and handle deployment of the database to GCP
+- Daniel: Help with backend and handle deployment of the database to GCP
