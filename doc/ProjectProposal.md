@@ -27,7 +27,10 @@ One of our stretch goals is to provide user authentication by allowing users to 
 ### Low-Fidelity UI Mockup
 ![](./lofi_mockup.jpg)
 ### Project Work Distribution
-Gagan: frontend + help with database implementation
-Lasya: backend + help with database implementation
-Joy: database implementation + help with frontend
-Daniel: database implementation + help with backend 
+Gagan: Will handle most of the frontend and help with database creation
+
+Lasya: Help with backend 
+
+Joy: Help with the frontend and creation of ER diagram
+
+Daniel: Help with backend and handle deployment of the database to GCP
