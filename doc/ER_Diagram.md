@@ -1,6 +1,6 @@
 # ER Diagram, Assumptions + Relationships, and Relational Schema
 ### ER Diagram
-![Stage 2 ER Diagram](./er_diagram.jpg)
+![Stage 2 ER Diagram](./ER_Diagram.jpg)
 
 ### Assumptions
 - Assuming every airport has a working runway, has arrival and departure flights 
@@ -84,10 +84,18 @@ Airlines (
 ```
 FlightRoutes (
   FlightNumber: INT [PK],
-  ScheduledDepartureTime: TIME [PK]
+  ScheduledDepartureTime: TIME [PK],
   Date: DATE [PK],
-  OriginAirportIATACode: VARCHAR(3) [FK to Airports.IATACode],
-  DestinationAirportIATACode: VARCHAR(3) [FK to Airports.IATACode],
-  AirlineAirportIATACode: VARCHAR(2) [FK to Airlines.IATACode],
+  AirlineIATA: VARCHAR(2) [FK to Airlines.IATACode],
+  ScheduledFlightDuration: INT
+)
+```
+```
+FlightPath (
+  FlightNumber: INT [PK] [FK to FlightRoutes.FlightNumber],
+  ScheduledDepartureTime: TIME [PK] [FK to FlightRoutes.ScheduledDepartureTime],
+  Date: DATE [PK] [FK to FligthRoutes.Date],
+  OriginAirportIATACode: VARCHAR(3) [PK] [FK to Airports.IATACode],
+  DestinationAirportIATACode: VARCHAR(3) [PK] [FK to Airports.IATACode]
 )
 ```
