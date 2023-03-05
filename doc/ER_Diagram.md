@@ -59,7 +59,7 @@ Delays (
   Date: DATE [PK] [FK to FlightRoutes.Date],
   OriginAirportIATACode: VARCHAR(3) [PK] [FK to Airports.IATA],
   DestinationAirportIATACode: VARCHAR(3) [PK] [FK to Airports.IATA],
-  DepartureDelay: TIME,
+  DepartureDelay: INT,
   IsCanceled: BOOL,
   DelayCancellationReason: VARCHAR(100),
   AirlineIATA: VARCHAR(3) [FK to Airlines.IATACode]
