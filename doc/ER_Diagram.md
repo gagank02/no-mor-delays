@@ -55,10 +55,10 @@ Itinerary (
 ```
 Delays (
   FlightNum: INT [PK] [FK to FlightRoutes.FlightNumber],
-  Date: DATE [PK] [FK to FlightRoutes.Date],
   ScheduledDepartureTime: TIME [PK] [FK to FlightRoutes.ScheduledDepartureTime],
-  DestinationAirportIATACode: VARCHAR(3) [PK] [FK to Airports.IATA],
+  Date: DATE [PK] [FK to FlightRoutes.Date],
   OriginAirportIATACode: VARCHAR(3) [PK] [FK to Airports.IATA],
+  DestinationAirportIATACode: VARCHAR(3) [PK] [FK to Airports.IATA],
   DepartureDelay: TIME,
   IsCanceled: BOOL,
   DelayCancellationReason: VARCHAR(100),
