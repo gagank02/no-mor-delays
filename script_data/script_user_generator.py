@@ -10,6 +10,8 @@ for i in range(1000):
     userNames.append(res)
     # (userID, userName, password, firstName, lastName)
 
-    f.write("(" + str(i) + "," + res + "," + str(i) + "," + firstNames[random.randint(0,100)] + "," + lastNames[random.randint(0,100)] + "),\n")
+    f.write("(" + str(i) + ",'" + res + "'," + str(i) + ",'" + firstNames[random.randint(0,100)] + "','" + lastNames[random.randint(0,100)] + "'),\n")
+    
+    #NOTE: YOU WILL NEED TO REMOVE FINAL "," AND ADD A ";" TO THE LAST LINE
 
 f.close()
