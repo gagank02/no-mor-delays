@@ -114,3 +114,29 @@ The count screenshots for each of these tables (other than auxilliary tables Use
     )
 
 ### Advanced Queries
+###### 1) Average Delay by Airline of non-cancelled flights 
+    SELECT d.AirlineIATA, a.Airline, AVG(d.DepartureDelay) AS avgDepartureDelay
+    FROM Delays d JOIN Airlines a ON (d.AirlineIATA = a.IATACode)
+    WHERE d.IsCanceled LIKE 0
+    GROUP BY d.AirlineIATA
+    ORDER BY avgDepartureDelay DESC
+    LIMIT 15;
+
+![image](https://user-images.githubusercontent.com/67709954/223892617-62e9638b-d7e5-4b0d-99f9-ef3cc7aac835.png)
+* Less than 15 results because there are less than 15 airlines *
+    
+###### 2) Most popular airlines from Chicago O'Hare Airport (ORD)
+    SELECT r.AirlineIATA, a.Airline, COUNT(*) AS FlightCount
+    FROM FlightPath p 
+        JOIN FlightRoutes r ON (p.FlightNumber = r.FlightNumber) 
+        JOIN Airlines a ON (r.AirlineIATA = a.IATACode) 
+    WHERE p.OriginAirportIATACode LIKE "ORD"
+    GROUP BY r.AirlineIATA
+    ORDER BY FlightCount DESC
+    LIMIT 15;
+    
+![image](https://user-images.githubusercontent.com/67709954/223892547-5142f788-65e6-406a-a899-617338ca129f.png)
+* Less than 15 results because there are less than 15 airlines *
+    
+
+    
