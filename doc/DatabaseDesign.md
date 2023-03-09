@@ -7,26 +7,26 @@ The count screenshots for each of these tables (other than auxilliary tables Use
 
 #### Airlines:
 
-<img width="300" alt="image" src="https://user-images.githubusercontent.com/67709954/223868949-210b7528-5802-4c12-85ef-d1296ce7e784.png">
+<img width="300" alt="image" src="https://user-images.githubusercontent.com/67709954/223893161-1cf8f07e-b182-445d-a883-3cc62417f30b.png">
 
 
 #### Airports:
 
-<img width="300" alt="AirportsCount" src="https://user-images.githubusercontent.com/67709954/223869018-532b3bda-1ee3-438b-994d-7e4c449abe7d.png">
+<img width="300" alt="AirportsCount" src="https://user-images.githubusercontent.com/67709954/223893180-1808402d-ad35-4046-9ed8-cd797dcf16b5.png">
 
 
 #### FlightPath:
 
-<img width="300" alt="FlightPathCount" src="https://user-images.githubusercontent.com/67709954/223869060-3bb8ec79-d9a5-49e7-8113-ddd388fd5ee4.png">
+<img width="300" alt="FlightPathCount" src="https://user-images.githubusercontent.com/67709954/223892812-8e366331-7d87-4ea3-983e-67b562394706.png">
 
 
 #### FlightRoutes:
 
-<img width="300" alt="FlightRoutesCount" src="https://user-images.githubusercontent.com/67709954/223869099-8bc6bde6-103b-456f-9fcf-5a61be070319.png">
+<img width="300" alt="FlightRoutesCount" src="https://user-images.githubusercontent.com/67709954/223892869-d23137f2-25f6-4216-b44b-00b3e742bb23.png">
 
 #### Delays:
 
-<img width="300" alt="DelaysCount" src="https://user-images.githubusercontent.com/67709954/223869142-cb68e291-4d49-41eb-91d5-32a8f686919d.png">
+<img width="300" alt="DelaysCount" src="https://user-images.githubusercontent.com/67709954/223892950-f315c963-32ca-46c8-aa90-5faf9a376c4a.png">
 
 
 
@@ -114,7 +114,7 @@ The count screenshots for each of these tables (other than auxilliary tables Use
     )
 
 ### Advanced Queries
-###### 1) Average Delay by Airline of non-cancelled flights 
+1) Average Delay by Airline of non-cancelled flights 
     SELECT d.AirlineIATA, a.Airline, AVG(d.DepartureDelay) AS avgDepartureDelay
     FROM Delays d JOIN Airlines a ON (d.AirlineIATA = a.IATACode)
     WHERE d.IsCanceled LIKE 0
@@ -125,7 +125,7 @@ The count screenshots for each of these tables (other than auxilliary tables Use
 ![image](https://user-images.githubusercontent.com/67709954/223892617-62e9638b-d7e5-4b0d-99f9-ef3cc7aac835.png)
 * Less than 15 results because there are less than 15 airlines *
     
-###### 2) Most popular airlines from Chicago O'Hare Airport (ORD)
+2) Most popular airlines from Chicago O'Hare Airport (ORD)
     SELECT r.AirlineIATA, a.Airline, COUNT(*) AS FlightCount
     FROM FlightPath p 
         JOIN FlightRoutes r ON (p.FlightNumber = r.FlightNumber) 
