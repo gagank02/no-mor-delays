@@ -173,10 +173,23 @@ CREATE INDEX idx_airlines_iata ON Airlines(IATACode);
 ![image](https://user-images.githubusercontent.com/67709954/224201926-2c246f82-1948-4f95-be26-2a775067000c.png)
 
 ##### Index on FlightRoutes(ScheduledFlightDuration)
+```sql
+CREATE INDEX idx_route_scheduled_duration ON FlightRoutes(ScheduledFlightDuration);
+```
+Since all the other options were already indexed, we decided to try indexing this query on ScheduledFlightDuration. This optimization helped decrease the cost from 234.77 to 225.99, which is not too drastic because this query doesn't rely on ScheduledFlightDuration so indexing on it doesn't impact the performance as much. 
 ![image](https://user-images.githubusercontent.com/67709954/224202005-21068a1f-0208-49ec-a6cf-6f9154e430dc.png)
 
+##### Index on Airlines(Airline)
+```sql
+CREATE INDEX idx_airline ON Airlines(Airline);
+```
+![image](https://user-images.githubusercontent.com/67709954/224202148-a51533fc-09ba-4b9d-a309-58bbc9e55cdb.png)
+
+```sql
+CREATE INDEX idx_route_scheduled_duration ON FlightRoutes(ScheduledFlightDuration);
+CREATE INDEX idx_airline ON Airlines(Airline);
+```
 ##### Index on FlightRoutes(ScheduledFlightDuration) and Airlines(Airline)
 ![image](https://user-images.githubusercontent.com/67709954/224202139-8d0ef167-fee2-4b3f-8cb9-04124f487306.png)
 
-##### Index on Airlines(Airline)
-![image](https://user-images.githubusercontent.com/67709954/224202148-a51533fc-09ba-4b9d-a309-58bbc9e55cdb.png)
+
