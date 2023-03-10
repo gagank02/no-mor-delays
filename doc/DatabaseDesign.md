@@ -149,24 +149,24 @@ The count screenshots for each of these tables (other than auxilliary tables Use
 ![image](https://user-images.githubusercontent.com/67709954/224196853-724bc4f1-c796-4d55-bfac-64f9e47747c0.png)
 
 ##### Index on Delays(DepartureDelay)
-```sql
-CREATE INDEX idx_departure_delay ON Delays(DepartureDelay);
-
 The first indexing we tried was an index on DepartureDelay. This index was able to decrease the cost from 33901.32 to 20695.37, which is quite drastic. Thus this optimization was quite effective, and we believe it does so because the AVG function is an aggreagate function and it had to look up all the DepartureDelays.
 
+```sql
+CREATE INDEX idx_departure_delay ON Delays(DepartureDelay);
 ```
 ![image](https://user-images.githubusercontent.com/67709954/224198590-3e4d75b6-6f4b-48a5-9917-539ada60cbbe.png)
 
 ##### Index on Airlines(Airline)
-```sql
-CREATE INDEX idx_airline ON Airlines(Airline);
-
 Similar to the last index, indexing on Airline was able to cut down the cost from 33901.32 to 20695.37. The overall cost is identical to  idx_departure_delay, but the actual time for aggregate using temporary table is slightly less compared to idx_departure_delay. We believe this is because we were trying compare Airlines during a join.
 
+```sql
+CREATE INDEX idx_airline ON Airlines(Airline);
 ```
 ![image](https://user-images.githubusercontent.com/67709954/224199972-d431cf3e-88fb-42f5-b351-536d261960d2.png)
 
 ##### Index on Delays(AirlineIATA) and Airlines(IATACode)
+Next, we tried to index on AirlineIATA and IATACode. This was able to decrease the cost even more than the last two indexing, from 33901.32 to 14993.20. This is most likely due to that we grouped by AirlineIATA and joined on the condition that the AirlineIATA and IATACode are the same.
+
 ```sql
 CREATE INDEX idx_delays_iata ON Delays(AirlineIATA);
 
@@ -174,9 +174,6 @@ CREATE INDEX idx_delays_iata ON Delays(AirlineIATA);
 
 ```sql
 CREATE INDEX idx_airlines_iata ON Airlines(IATACode);
-
-Next, we tried to index on AirlineIATA and IATACode. This was able to decrease the cost even more than the last two indexing, from 33901.32 to 14993.20. This is most likely due to that we grouped by AirlineIATA and joined on the condition that the AirlineIATA and IATACode are the same.
-
 ```
 ![image](https://user-images.githubusercontent.com/67709954/224201584-0f417ce1-da88-4137-b1ff-4a66aa3508e9.png)
 
