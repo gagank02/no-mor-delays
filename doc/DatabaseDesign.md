@@ -176,20 +176,24 @@ CREATE INDEX idx_airlines_iata ON Airlines(IATACode);
 ```sql
 CREATE INDEX idx_route_scheduled_duration ON FlightRoutes(ScheduledFlightDuration);
 ```
-Since all the other options were already indexed, we decided to try indexing this query on ScheduledFlightDuration. This optimization helped decrease the cost from 234.77 to 225.99, which is not too drastic because this query doesn't rely on ScheduledFlightDuration so indexing on it doesn't impact the performance as much. 
+Since all the other options were already indexed, we decided to try indexing this query on ScheduledFlightDuration. This optimization helped decrease the cost from 234.77 to 225.98, which is not too drastic because this query doesn't rely on ScheduledFlightDuration so indexing on it doesn't impact the performance as much. 
+
 ![image](https://user-images.githubusercontent.com/67709954/224202005-21068a1f-0208-49ec-a6cf-6f9154e430dc.png)
 
 ##### Index on Airlines(Airline)
+Similar to the last index, indexing on Airline also resulted in the same cost deduction from 234.77 to 225.98. We see that the time improved more than with a `idx_route_scheduled_duration` but the overall cost was unchanged. Altough Airline is a column in our table, this is possibly because we are already grouping by Airline and there aren't that many airlines to index.  
+
 ```sql
 CREATE INDEX idx_airline ON Airlines(Airline);
 ```
 ![image](https://user-images.githubusercontent.com/67709954/224202148-a51533fc-09ba-4b9d-a309-58bbc9e55cdb.png)
 
+##### Index on FlightRoutes(ScheduledFlightDuration) and Airlines(Airline)
 ```sql
 CREATE INDEX idx_route_scheduled_duration ON FlightRoutes(ScheduledFlightDuration);
 CREATE INDEX idx_airline ON Airlines(Airline);
 ```
-##### Index on FlightRoutes(ScheduledFlightDuration) and Airlines(Airline)
-![image](https://user-images.githubusercontent.com/67709954/224202139-8d0ef167-fee2-4b3f-8cb9-04124f487306.png)
+As seen in the previous two index analyses, neither proved to change cost by much, so using both as indices reduces cost by the same amount from 234.77 to 225.98.
 
+![image](https://user-images.githubusercontent.com/67709954/224202139-8d0ef167-fee2-4b3f-8cb9-04124f487306.png)
 
