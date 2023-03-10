@@ -125,7 +125,7 @@ The count screenshots for each of these tables (other than auxilliary tables Use
  ```
 
 ![image](https://user-images.githubusercontent.com/67709954/223892617-62e9638b-d7e5-4b0d-99f9-ef3cc7aac835.png)
-* Less than 15 results because there are less than 15 airlines *
+* Less than 15 results because there are less than 15 airlines
     
 2) Most popular airlines from Chicago O'Hare Airport (ORD)
 
@@ -141,7 +141,7 @@ The count screenshots for each of these tables (other than auxilliary tables Use
  ```
     
 ![image](https://user-images.githubusercontent.com/67709954/223892547-5142f788-65e6-406a-a899-617338ca129f.png)
-* Less than 15 results because there are less than 15 airlines *
+* Less than 15 results because there are less than 15 airlines
     
 
 ### Indexing
@@ -169,3 +169,14 @@ CREATE INDEX idx_airlines_iata ON Airlines(IATACode);
 ```
 ![image](https://user-images.githubusercontent.com/67709954/224201584-0f417ce1-da88-4137-b1ff-4a66aa3508e9.png)
 
+#### Advanced Query 2
+![image](https://user-images.githubusercontent.com/67709954/224201926-2c246f82-1948-4f95-be26-2a775067000c.png)
+
+##### Index on FlightRoutes(ScheduledFlightDuration)
+![image](https://user-images.githubusercontent.com/67709954/224202005-21068a1f-0208-49ec-a6cf-6f9154e430dc.png)
+
+##### Index on FlightRoutes(ScheduledFlightDuration) and Airlines(Airline)
+![image](https://user-images.githubusercontent.com/67709954/224202139-8d0ef167-fee2-4b3f-8cb9-04124f487306.png)
+
+##### Index on Airlines(Airline)
+![image](https://user-images.githubusercontent.com/67709954/224202148-a51533fc-09ba-4b9d-a309-58bbc9e55cdb.png)
