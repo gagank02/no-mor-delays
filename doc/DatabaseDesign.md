@@ -149,7 +149,7 @@ The count screenshots for each of these tables (other than auxilliary tables Use
 ![image](https://user-images.githubusercontent.com/67709954/224196853-724bc4f1-c796-4d55-bfac-64f9e47747c0.png)
 
 ##### Index on Delays(DepartureDelay)
-The first indexing we tried was an index on DepartureDelay. This index was able to decrease the cost from 33901.32 to 20695.37, which is quite drastic. Thus this optimization was quite effective, and we believe it does so because the AVG function is an aggreagate function and it had to look up all the DepartureDelays.
+The first indexing we tried was an index on DepartureDelay. This index was able to decrease the cost from 33901.32 to 20695.37, which is quite drastic. Thus this optimization was quite effective, and we believe it does so because the AVG function is an aggregate function, and it had to look up all the DepartureDelays.
 
 ```sql
 CREATE INDEX idx_departure_delay ON Delays(DepartureDelay);
