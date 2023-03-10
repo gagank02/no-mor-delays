@@ -32,16 +32,16 @@ The count screenshots for each of these tables (other than auxilliary tables Use
 
 ### DDL Commands
 #### Airlines:
-
+```sql
     CREATE TABLE `Airlines` (
       `IATACode` VARCHAR(2) NOT NULL,
       `Airline` VARCHAR(255) NOT NULL,
 
       PRIMARY KEY (`IATACode`) 
     )
-
+```
 #### Airports:
-
+```sql
     CREATE TABLE `Airports` (
       `IATACode` VARCHAR(3) NOT NULL,
       `AirportName` VARCHAR(255) NOT NULL,
@@ -52,9 +52,9 @@ The count screenshots for each of these tables (other than auxilliary tables Use
 
       PRIMARY KEY (`IATACode`)
     )
-
+```
 #### FlightPath:
-
+```sql
     CREATE TABLE `FlightPath` (
       `FlightNumber` INT NOT NULL,
       `ScheduledDepartureTime` TIME NOT NULL,
@@ -69,9 +69,9 @@ The count screenshots for each of these tables (other than auxilliary tables Use
       FOREIGN KEY (`OriginAirportIATACode`) REFERENCES `Airports` (`IATACode`),
       FOREIGN KEY (`DestinationAirportIATACode`) REFERENCES `Airports` (`IATACode`)
     )
-
+```
 #### FlightRoutes:
-
+```sql
     CREATE TABLE `FlightRoutes` (
       `FlightNumber` INT NOT NULL,
       `ScheduledDepartureTime` TIME NOT NULL,
@@ -85,9 +85,9 @@ The count screenshots for each of these tables (other than auxilliary tables Use
       KEY `RelevantDate` (`RelevantDate`),
       FOREIGN KEY (`AirlineIATA`) REFERENCES `Airlines` (`IATACode`)
     )
-
+```
 #### Delays
-    
+```sql    
     CREATE TABLE `Delays` (
       `FlightNum` INT NOT NULL,
       `ScheduledDepartureTime` TIME NOT NULL,
@@ -112,7 +112,7 @@ The count screenshots for each of these tables (other than auxilliary tables Use
       CONSTRAINT `OriginAirport` FOREIGN KEY (`OriginAirportIATACode`) REFERENCES `Airports` (`IATACode`),
       CONSTRAINT `AirlineCode` FOREIGN KEY (`AirlineIATA`) REFERENCES `Airlines` (`IATACode`)
     )
-
+```
 ### Advanced Queries
 1) Average Delay by Airline of non-cancelled flights 
 ```sql
