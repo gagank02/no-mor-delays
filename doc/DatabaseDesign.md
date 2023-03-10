@@ -144,4 +144,28 @@ The count screenshots for each of these tables (other than auxilliary tables Use
 * Less than 15 results because there are less than 15 airlines *
     
 
-    
+### Indexing
+#### Advanced Query 1
+![image](https://user-images.githubusercontent.com/67709954/224196853-724bc4f1-c796-4d55-bfac-64f9e47747c0.png)
+
+##### Index on Delays(DepartureDelay)
+```sql
+CREATE INDEX idx_departure_delay ON Delays(DepartureDelay);
+```
+![image](https://user-images.githubusercontent.com/67709954/224198590-3e4d75b6-6f4b-48a5-9917-539ada60cbbe.png)
+
+##### Index on Airlines(Airline)
+```sql
+CREATE INDEX idx_airline ON Airlines(Airline);
+```
+![image](https://user-images.githubusercontent.com/67709954/224199972-d431cf3e-88fb-42f5-b351-536d261960d2.png)
+
+##### Index on Delays(AirlineIATA) and Airlines(IATACode)
+```sql
+CREATE INDEX idx_delays_iata ON Delays(AirlineIATA);
+```
+```sql
+CREATE INDEX idx_airlines_iata ON Airlines(IATACode);
+```
+![image](https://user-images.githubusercontent.com/67709954/224201584-0f417ce1-da88-4137-b1ff-4a66aa3508e9.png)
+
