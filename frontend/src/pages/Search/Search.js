@@ -4,6 +4,7 @@ import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import Button from '@mui/material/Button';
 import styles from './Search.module.css'
+import FlightTable from '../../components/FlightTable/FlightTable';
 
 const Search = () => {
     const [originAirport, setoriginAirport] = useState(null);
@@ -45,6 +46,7 @@ const Search = () => {
                     Search
                 </Button>
             </div>
+            <FlightTable data={delay_data} />
         </div>
     )
 }
