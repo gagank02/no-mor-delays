@@ -14,3 +14,10 @@
     flex-direction: row;
     gap: 25px;
 }
+
+.loader {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%
+}

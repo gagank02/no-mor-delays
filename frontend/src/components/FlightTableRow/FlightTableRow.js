@@ -16,6 +16,24 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
 /** https://mui.com/material-ui/react-table/ */
 
+function formatTime(time) {
+  let hour = time.substr(0, 2);
+  let minute = time.substr(2, 2);
+
+  return hour + ':' + minute;
+}
+
+function calculateAdjustedTime(timeStr, departureDelay) {
+	const time = formatTime(timeStr);
+  const [hours, minutes] = time.split(':').map((str) => parseInt(str, 10));
+  const totalMinutes = hours * 60 + minutes + departureDelay;
+  const adjustedHours = Math.floor(totalMinutes / 60);
+  const adjustedMinutes = totalMinutes % 60;
+  const adjustedtime =
+    `${adjustedHours.toString().padStart(2, '0')}:${adjustedMinutes.toString().padStart(2, '0')}`;
+  return adjustedtime;
+}
+
 const FlightTableRow = (props) => {
 	const { row } = props;
 	const [open, setOpen] = useState(false);
@@ -35,18 +53,18 @@ const FlightTableRow = (props) => {
 				<TableCell component="th" scope="row">
 					{row.FlightNumber}
 				</TableCell>
-				<TableCell align="right">{row.OriginAirportIATACode}</TableCell>
-				<TableCell align="right">{row.DestinationAirportIATACode}</TableCell>
-				<TableCell align="right">{row.AirlineIATA}</TableCell>
-				<TableCell align="right">{row.Date}</TableCell>
-				<TableCell align="right">{row.ScheduledDepartureTime}</TableCell>
-				<TableCell align="right">
+				<TableCell>{row.OriginAirportIATACode}</TableCell>
+				<TableCell>{row.DestinationAirportIATACode}</TableCell>
+				<TableCell>{row.AirlineIATA}</TableCell>
+				<TableCell>{row.Date}</TableCell>
+				<TableCell>{formatTime(row.ScheduledDepartureTime)}</TableCell>
+				<TableCell>
 					{
 						(() => {
 							if (row.DepartureDelay < 0) {
-								return "Early";
+								return <p style={{color: "#39FF14"}}>Early</p>;
 							} else if (row.DepartureDelay > 0) {
-								return "Delayed";
+								return <p style={{color: "red"}}>Delayed</p>;
 							} else {
 								return "On Time";
 							}
@@ -61,10 +79,11 @@ const FlightTableRow = (props) => {
 							<Typography variant="h6" gutterBottom component="div">
 								Delay Details
 							</Typography>
-							<Table size="small" aria-label="purchases">
+							<Table size="small" aria-label="delay-details">
 								<TableHead>
 									<TableRow>
 										<TableCell>Departure Delay</TableCell>
+										<TableCell>Adjusted Time</TableCell>
 										<TableCell>Is Canceled</TableCell>
 										<TableCell>Delay Cancellation Reason</TableCell>
 									</TableRow>
@@ -72,9 +91,10 @@ const FlightTableRow = (props) => {
 								<TableBody>
 									<TableRow key={row.FlightNumber}>
 										<TableCell component="th" scope="row">
-											{row.DepartureDelay}
+											{row.DepartureDelay} min
 										</TableCell>
-										<TableCell>{row.IsCanceled}</TableCell>
+										<TableCell>{calculateAdjustedTime(row.ScheduledDepartureTime, row.DepartureDelay)}</TableCell>
+										<TableCell>{row.IsCanceled ? "Yes" : "No"}</TableCell>
 										<TableCell>
 											{row.DelayCancellationReason ? row.DelayCancellationReason : "N/A"}
 										</TableCell>

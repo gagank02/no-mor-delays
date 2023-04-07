@@ -5,14 +5,25 @@ import Autocomplete from '@mui/material/Autocomplete';
 import Button from '@mui/material/Button';
 import styles from './Search.module.css'
 import FlightTable from '../../components/FlightTable/FlightTable';
+import { CircularProgress } from '@mui/material';
 
 const Search = () => {
     const [originAirport, setoriginAirport] = useState(null);
     const [destAirport, setdestAirport] = useState(null);
+    const [filteredDelayData, setFilteredDelayData] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleSearch = () => {
         // Perform flight search using originAirport and destAirport
+        setIsLoading(true);
         console.log(`Searching for flights from ${originAirport.IATACode} to ${destAirport.IATACode}`);
+        const filtered = delay_data.filter(
+            (item) =>
+                item.OriginAirportIATACode === originAirport.IATACode &&
+                item.DestinationAirportIATACode === destAirport.IATACode
+        );
+        setFilteredDelayData(filtered)
+        setIsLoading(false);
     };
 
     return (
@@ -26,8 +37,8 @@ const Search = () => {
                     renderInput={(params) => (
                         <TextField required {...params} label="Origin" variant="outlined" />
                     )}
-                    sx={{width: '150px'}}
-                    
+                    sx={{ width: '150px' }}
+
                 />
                 <Autocomplete
                     options={airports}
@@ -36,17 +47,30 @@ const Search = () => {
                     renderInput={(params) => (
                         <TextField required {...params} label="Destination" variant="outlined" />
                     )}
-                    sx={{width: '150px'}}
+                    sx={{ width: '150px' }}
                 />
-                <Button 
-                    variant="contained" 
+                <Button
+                    variant="contained"
                     onClick={handleSearch}
                     disabled={!originAirport || !destAirport}
                 >
                     Search
                 </Button>
             </div>
-            <FlightTable data={delay_data} />
+            {isLoading ? (
+                <div
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        height: '100%',
+                    }}
+                >
+                    <CircularProgress />
+                </div>
+            ) : (
+                <FlightTable data={filteredDelayData} />
+            )}
         </div>
     )
 }
