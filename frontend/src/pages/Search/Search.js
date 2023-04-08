@@ -8,8 +8,8 @@ import FlightTable from '../../components/FlightTable/FlightTable';
 import { CircularProgress } from '@mui/material';
 
 const Search = () => {
-    const [originAirport, setoriginAirport] = useState(null);
-    const [destAirport, setdestAirport] = useState(null);
+    const [originAirport, setOriginAirport] = useState(null);
+    const [destAirport, setDestAirport] = useState(null);
     const [filteredDelayData, setFilteredDelayData] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
 
@@ -22,9 +22,15 @@ const Search = () => {
                 item.OriginAirportIATACode === originAirport.IATACode &&
                 item.DestinationAirportIATACode === destAirport.IATACode
         );
-        setFilteredDelayData(filtered)
+        setFilteredDelayData(filtered);
         setIsLoading(false);
     };
+
+    const handleClear = () => {
+        setOriginAirport(null);
+        setDestAirport(null);
+        setFilteredDelayData(null);
+    }
 
     return (
         <div className={styles.container}>
@@ -33,21 +39,24 @@ const Search = () => {
                 <Autocomplete
                     options={airports}
                     getOptionLabel={(airport) => airport.IATACode}
-                    onChange={(event, value) => setoriginAirport(value)}
+                    onChange={(event, value) => setOriginAirport(value)}
                     renderInput={(params) => (
                         <TextField required {...params} label="Origin" variant="outlined" />
                     )}
                     sx={{ width: '150px' }}
-
+                    value={originAirport || null}
+                    defaultValue={null}
                 />
                 <Autocomplete
                     options={airports}
                     getOptionLabel={(airport) => airport.IATACode}
-                    onChange={(event, value) => setdestAirport(value)}
+                    onChange={(event, value) => setDestAirport(value)}
                     renderInput={(params) => (
                         <TextField required {...params} label="Destination" variant="outlined" />
                     )}
                     sx={{ width: '150px' }}
+                    value={destAirport || null}
+                    defaultValue={null}
                 />
                 <Button
                     variant="contained"
@@ -55,6 +64,13 @@ const Search = () => {
                     disabled={!originAirport || !destAirport}
                 >
                     Search
+                </Button>
+                <Button
+                    variant="contained"
+                    onClick={handleClear}
+                    disabled={!originAirport && !destAirport && !filteredDelayData}
+                >
+                    Clear
                 </Button>
             </div>
             {isLoading ? (
