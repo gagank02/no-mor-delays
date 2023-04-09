@@ -9,7 +9,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { CircularProgress } from '@mui/material';
 
-const FlightTable = ({ data }) => {
+const FlightTable = ({ data, handleUpdate }) => {
 	return (
 		<TableContainer component={Paper}>
 			<Table aria-label="flight-table">
@@ -31,6 +31,7 @@ const FlightTable = ({ data }) => {
 							<FlightTableRow
 								key={`${row.FlightNumber} - ${row.AirlineIATA}`}
 								row={row}
+								handleUpdate={handleUpdate}
 							/>
 						))
 					) : (

@@ -34,17 +34,12 @@ function calculateAdjustedTime(timeStr, departureDelay) {
 	return adjustedtime;
 }
 
-const FlightTableRow = ({row}) => {
+const FlightTableRow = ({ row, handleUpdate }) => {
 	const [open, setOpen] = useState(false);
 	const [isEditing, setIsEditing] = useState(false);
 
 	const handleEdit = () => {
 		setIsEditing(true);
-	}
-
-	const handleCloseModal = () => {
-		setIsEditing(false);
-		// update data
 	}
 
 	return (
@@ -120,7 +115,7 @@ const FlightTableRow = ({row}) => {
 				</TableCell>
 			</TableRow>
 			{isEditing && (
-				<DelayDetails data={row} onClose={handleCloseModal} />
+				<DelayDetails data={row} handleClose={() => setIsEditing(false)} handleUpdate={handleUpdate} />
 			)}
 		</>
 	);

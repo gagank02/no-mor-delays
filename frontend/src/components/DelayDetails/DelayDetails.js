@@ -12,7 +12,7 @@ import {
 	Button
 } from '@mui/material'
 
-const DelayDetails = ({ data, onClose }) => {
+const DelayDetails = ({ data, handleClose, handleUpdate }) => {
 	const style = {
 		position: 'absolute',
 		top: '50%',
@@ -40,24 +40,33 @@ const DelayDetails = ({ data, onClose }) => {
 	};
 
 	const handleSwitchChange = (event) => {
+		const { name } = event.target;
+		// console.log(event.target.checked)
 		setChecked(event.target.checked);
 		setFormData((prevData) => ({
 			...prevData,
-			["isCanceled"]: checked,
+			[name]: checked,
 		}));
-		console.log(formData)
+		// console.log(formData)
 	};
 
-	const handleSave = () => {
-		console.log(formData);
-		onClose();
+	const handleSave = async () => {
+		try {
+			console.log(formData);
+			// update data w/ await and then close
+			await handleUpdate(formData);
+			handleClose();
+		} catch (err) {
+			console.error(err)
+		}
+
 	}
 
 	return (
 		<div >
 			<Modal
 				open
-				onClose={onClose}
+				onClose={handleClose}
 				closeAfterTransition
 				slots={{ backdrop: Backdrop }}
 				slotProps={{
@@ -97,7 +106,7 @@ const DelayDetails = ({ data, onClose }) => {
 								}}
 							>
 								<Stack direction="row" spacing={1} alignItems="center">
-									<Typography>No</Typography>
+									<Typography sx={{ color: `${!checked ? 'black' : 'rgba(0, 0, 0, 0.54)'}` }}>No</Typography>
 									<FormControlLabel
 										control={
 											<Switch
@@ -109,7 +118,7 @@ const DelayDetails = ({ data, onClose }) => {
 											/>
 										}
 									/>
-									<Typography>Yes</Typography>
+									<Typography sx={{ color: `${checked ? 'black' : 'rgba(0, 0, 0, 0.54)'}` }}>Yes</Typography>
 								</Stack>
 							</Box>
 						</Box>

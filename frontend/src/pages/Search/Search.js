@@ -14,6 +14,7 @@ const Search = () => {
     const [destAirport, setDestAirport] = useState(null);
     const [filteredDelayData, setFilteredDelayData] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
+    const [flightData, setFlightData] = useState([]);
 
     const handleSearch = () => {
         // Perform flight search using originAirport and destAirport
@@ -24,19 +25,19 @@ const Search = () => {
                 item.OriginAirportIATACode === originAirport.IATACode &&
                 item.DestinationAirportIATACode === destAirport.IATACode
         );
-        setFilteredDelayData(filtered);
+        // setFilteredDelayData(filtered);
+        setFlightData(filtered);
         setIsLoading(false);
     };
 
-    const refreshData = () => {
-        setIsLoading(true);
-        setIsLoading(false);
+    const handleRowUpdate = async (updatedFlight) => {
+        // updateFlights
     }
 
     const handleClear = () => {
         setOriginAirport(null);
         setDestAirport(null);
-        setFilteredDelayData(null);
+        setFlightData(null);
     }
 
     return (
@@ -93,8 +94,8 @@ const Search = () => {
                     <CircularProgress />
                 </div>
             ) : (
-                // <FlightTable data={filteredDelayData} />
-                <FlightTableRow row={delay_data[0]} />
+                <FlightTable data={flightData} handleUpdate={handleRowUpdate}/>
+                // <FlightTableRow row={delay_data[0]} />
             )}
         </div>
     )
