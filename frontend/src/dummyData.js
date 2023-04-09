@@ -5,8 +5,8 @@ export const delay_data = [
         "Date": "2015-01-01",
         "OriginAirportIATACode": "IAH",
         "DestinationAirportIATACode": "PHX",
-        "DepartureDelay": 0.0,
-        "IsCanceled": false,
+        "DepartureDelay": -10.0,
+        "IsCanceled": true,
         "DelayCancellationReason": null,
         "AirlineIATA": "UA"
     },
