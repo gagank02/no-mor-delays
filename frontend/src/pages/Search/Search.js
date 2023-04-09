@@ -7,6 +7,8 @@ import styles from './Search.module.css'
 import FlightTable from '../../components/FlightTable/FlightTable';
 import { CircularProgress } from '@mui/material';
 
+import FlightTableRow from '../../components/FlightTableRow/FlightTableRow';
+
 const Search = () => {
     const [originAirport, setOriginAirport] = useState(null);
     const [destAirport, setDestAirport] = useState(null);
@@ -25,6 +27,11 @@ const Search = () => {
         setFilteredDelayData(filtered);
         setIsLoading(false);
     };
+
+    const refreshData = () => {
+        setIsLoading(true);
+        setIsLoading(false);
+    }
 
     const handleClear = () => {
         setOriginAirport(null);
@@ -67,6 +74,7 @@ const Search = () => {
                 </Button>
                 <Button
                     variant="contained"
+                    color="warning"
                     onClick={handleClear}
                     disabled={!originAirport && !destAirport && !filteredDelayData}
                 >
@@ -85,7 +93,8 @@ const Search = () => {
                     <CircularProgress />
                 </div>
             ) : (
-                <FlightTable data={filteredDelayData} />
+                // <FlightTable data={filteredDelayData} />
+                <FlightTableRow row={delay_data[0]} />
             )}
         </div>
     )

@@ -12,6 +12,7 @@ import Typography from '@mui/material/Typography';
 import { Button } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import DelayDetails from '../DelayDetails/DelayDetails';
 
 /** https://mui.com/material-ui/react-table/ */
 
@@ -33,9 +34,18 @@ function calculateAdjustedTime(timeStr, departureDelay) {
 	return adjustedtime;
 }
 
-const FlightTableRow = (props) => {
-	const { row } = props;
+const FlightTableRow = ({row}) => {
 	const [open, setOpen] = useState(false);
+	const [isEditing, setIsEditing] = useState(false);
+
+	const handleEdit = () => {
+		setIsEditing(true);
+	}
+
+	const handleCloseModal = () => {
+		setIsEditing(false);
+		// update data
+	}
 
 	return (
 		<>
@@ -79,7 +89,7 @@ const FlightTableRow = (props) => {
 								<Typography variant="h6" gutterBottom component="div">
 									Delay Details
 								</Typography>
-								<Button>
+								<Button onClick={handleEdit}>
 									Edit
 								</Button>
 							</Box>
@@ -109,6 +119,9 @@ const FlightTableRow = (props) => {
 					</Collapse>
 				</TableCell>
 			</TableRow>
+			{isEditing && (
+				<DelayDetails data={row} onClose={handleCloseModal} />
+			)}
 		</>
 	);
 }
