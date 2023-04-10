@@ -13,6 +13,7 @@ import { Button } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import DelayDetails from '../DelayDetails/DelayDetails';
+import DeleteDialog from '../DeleteDialog/DeleteDialog';
 
 /** https://mui.com/material-ui/react-table/ */
 
@@ -37,9 +38,20 @@ function calculateAdjustedTime(timeStr, departureDelay) {
 const FlightTableRow = ({ row, handleUpdate }) => {
 	const [open, setOpen] = useState(false);
 	const [isEditing, setIsEditing] = useState(false);
+	const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
 	const handleEdit = () => {
 		setIsEditing(true);
+	}
+
+	const handleDelete = () => {
+		// delete delay through api
+		console.log("delete");
+		setOpenDeleteDialog(false);
+	}
+
+	const handleCloseDelete = () => {
+		setOpenDeleteDialog(false);
 	}
 
 	return (
@@ -87,6 +99,9 @@ const FlightTableRow = ({ row, handleUpdate }) => {
 								<Button onClick={handleEdit}>
 									Edit
 								</Button>
+								<Button color="warning" onClick={() => setOpenDeleteDialog(true)}>
+									Delete
+								</Button>
 							</Box>
 							<Table size="small" aria-label="delay-details">
 								<TableHead>
@@ -116,6 +131,9 @@ const FlightTableRow = ({ row, handleUpdate }) => {
 			</TableRow>
 			{isEditing && (
 				<DelayDetails data={row} handleClose={() => setIsEditing(false)} handleUpdate={handleUpdate} />
+			)}
+			{openDeleteDialog && (
+				<DeleteDialog open={openDeleteDialog} handleClose={handleCloseDelete} handleDelete={handleDelete} />
 			)}
 		</>
 	);

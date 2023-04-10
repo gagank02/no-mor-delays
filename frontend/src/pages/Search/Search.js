@@ -6,6 +6,7 @@ import Button from '@mui/material/Button';
 import styles from './Search.module.css'
 import FlightTable from '../../components/FlightTable/FlightTable';
 import { CircularProgress, Typography } from '@mui/material';
+import FlightTableRow from '../../components/FlightTableRow/FlightTableRow';
 
 const Search = () => {
     const [originAirport, setOriginAirport] = useState(null);
@@ -30,6 +31,7 @@ const Search = () => {
 
     const handleRowUpdate = async (updatedFlight) => {
         // updateFlights
+        console.log("update")
     }
 
     const handleClear = () => {
