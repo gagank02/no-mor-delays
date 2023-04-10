@@ -7,6 +7,7 @@ import styles from './Search.module.css'
 import FlightTable from '../../components/FlightTable/FlightTable';
 import { CircularProgress, Typography } from '@mui/material';
 import FlightTableRow from '../../components/FlightTableRow/FlightTableRow';
+import axios from 'axios'
 
 const Search = () => {
     const [originAirport, setOriginAirport] = useState(null);
@@ -39,6 +40,18 @@ const Search = () => {
         setDestAirport(null);
         setFlightData(null);
     }
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const result = await axios(
+                'http://35.208.235.93/airports/IATA',
+            );
+
+            console.log(result.data);
+        };
+
+        fetchData();
+    }, [])
 
     return (
         <div className={styles.container}>
@@ -94,7 +107,7 @@ const Search = () => {
                     <CircularProgress />
                 </div>
             ) : (
-                <FlightTable data={flightData} handleUpdate={handleRowUpdate}/>
+                <FlightTable data={flightData} handleUpdate={handleRowUpdate} />
                 // <FlightTableRow row={delay_data[0]} />
             )}
         </div>
