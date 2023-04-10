@@ -1,13 +1,11 @@
 import { useEffect, useState } from 'react'
-import { delay_data, flights_data, airlines, airports } from '../../dummyData'
+import { delay_data, airports } from '../../dummyData'
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import Button from '@mui/material/Button';
 import styles from './Search.module.css'
 import FlightTable from '../../components/FlightTable/FlightTable';
-import { CircularProgress } from '@mui/material';
-
-import FlightTableRow from '../../components/FlightTableRow/FlightTableRow';
+import { CircularProgress, Typography } from '@mui/material';
 
 const Search = () => {
     const [originAirport, setOriginAirport] = useState(null);
@@ -42,7 +40,7 @@ const Search = () => {
 
     return (
         <div className={styles.container}>
-            <h1>Find Flights</h1>
+            <Typography variant="h4" component="h2">Find Flights</Typography>
             <div className={styles.row}>
                 <Autocomplete
                     options={airports}

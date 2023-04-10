@@ -9,20 +9,22 @@ import {
   Stack,
   Button
 } from '@mui/material'
-import { airports } from '../../dummyData';
+import { airports, airlines } from '../../dummyData';
+
+const defaultFormData = {
+  "FlightNumber": '',
+  "ScheduledDepartureTime": "",
+  "Date": "",
+  "OriginAirportIATACode": "",
+  "DestinationAirportIATACode": "",
+  "DepartureDelay": '',
+  "IsCanceled": false,
+  "DelayCancellationReason": '',
+  "AirlineIATA": ""
+}
 
 const Report = () => {
-  const [formData, setFormData] = useState({
-    "FlightNumber": undefined,
-    "ScheduledDepartureTime": "",
-    "Date": "",
-    "OriginAirportIATACode": "",
-    "DestinationAirportIATACode": "",
-    "DepartureDelay": undefined,
-    "IsCanceled": false,
-    "DelayCancellationReason": null,
-    "AirlineIATA": ""
-  });
+  const [formData, setFormData] = useState(defaultFormData);
   const [checked, setChecked] = useState(formData.IsCanceled)
 
   const airportIATACodes = airports.map((airport) => airport.IATACode);
@@ -37,30 +39,53 @@ const Report = () => {
 
   const handleSwitchChange = (event) => {
     const { name } = event.target;
-    // console.log(event.target.checked)
     setChecked(event.target.checked);
     setFormData((prevData) => ({
       ...prevData,
       [name]: checked,
     }));
-    // console.log(formData)
   };
 
   const handleTimeChange = (event) => {
-
+    const time = event.target.value;
+    const revertedTime = time.slice(0, 2) + time.slice(3);
+    setFormData({ ...formData, ScheduledDepartureTime: revertedTime });
   }
 
-  const handleDateChange = (event) => {
-
+  function formatTime(timeString) {
+    let formattedTime = timeString.slice(0, 2) + ":" + timeString.slice(2);
+    return formattedTime;
   }
 
-  const handleAirportChange = (airport, value) => {
-    console.log(airport, value)
+  const handleAirportChange = (field, value) => {
     setFormData((prevData) => ({
       ...prevData,
-      [airport]: value,
+      [field]: value,
     }));
   }
+
+  const handleAirlineChange = (event, value) => {
+    if (value) {
+      setFormData({
+        ...formData,
+        AirlineIATA: value.IATACode,
+      });
+    } else {
+      setFormData({
+        ...formData,
+        AirlineIATA: "",
+      });
+    }
+  }
+
+  const isFormValid =
+    formData.FlightNumber &&
+    formData.Date &&
+    formData.ScheduledDepartureTime &&
+    formData.OriginAirportIATACode &&
+    formData.DestinationAirportIATACode &&
+    formData.AirlineIATA &&
+    formData.DepartureDelay;
 
   const handleSave = async () => {
     try {
@@ -71,6 +96,10 @@ const Report = () => {
     }
   }
 
+  const handleClear = () => {
+    setFormData(defaultFormData);
+  }
+
   return (
     <div >
       <Box sx={{
@@ -78,28 +107,33 @@ const Report = () => {
         justifyContent: 'center',
         alignItems: 'center',
         flexDirection: 'column',
-        width: '100%'
+        width: '100%',
+        gap: "50px",
       }}>
-        <Typography variant="h4" component="h2">
-          Report a Delay
-        </Typography>
+        <Typography variant="h4" component="h2">Report a Delay</Typography>
         <Stack direction="row" spacing={3}>
-          <Stack direction="column" spacing={1}>
-            <Typography variant="h6" component="h2">
+          <Stack direction="column" spacing={2}>
+            <Typography variant="h6" component="h2" sx={{ textAlign: "center" }}>
               Add Flight Details
             </Typography>
             <TextField
               label="Flight Number"
               name="FlightNumber"
+              type="number"
               value={formData.FlightNumber}
               onChange={handleChange}
+              InputProps={{
+                inputProps: {
+                  min: 0
+                }
+              }}
               required
             />
             <TextField
               label="Departure Date"
               name="Date"
               value={formData.Date}
-              onChange={handleDateChange}
+              onChange={handleChange}
               required
               type="date"
               InputLabelProps={{ shrink: true }}
@@ -107,7 +141,7 @@ const Report = () => {
             <TextField
               label="Scheduled Departure Time"
               name="ScheduledDepartureTime"
-              value={formData.ScheduledDepartureTime}
+              value={formData.ScheduledDepartureTime ? formatTime(formData.ScheduledDepartureTime) : ''}
               onChange={handleTimeChange}
               required
               type="time"
@@ -125,15 +159,28 @@ const Report = () => {
             <Autocomplete
               options={airportIATACodes}
               getOptionLabel={(airport) => airport}
-              onChange={(event, value) => handleAirportChange("OriginAirportIATACode", value)}
+              onChange={(event, value) => handleAirportChange("DestinationAirportIATACode", value)}
               renderInput={(params) => (
-                <TextField required {...params} name="OriginAirportIATACode" label="Origin Airport" variant="outlined" />
+                <TextField required {...params} name="DestinationAirportIATACode" label="Destination Airport" variant="outlined" />
               )}
-              value={formData.OriginAirportIATACode || null}
+              value={formData.DestinationAirportIATACode || null}
+            />
+            <Autocomplete
+              options={airlines}
+              getOptionLabel={(airline) => airline.AirlineName}
+              onChange={handleAirlineChange}
+              renderInput={(params) => (
+                <TextField required {...params} name="AirlineIATA" label="Airline" variant="outlined" />
+              )}
+              value={
+                formData.AirlineIATA
+                  ? airlines.find((airline) => airline.IATACode === formData.AirlineIATA)
+                  : null
+              }
             />
           </Stack>
-          <Stack direction="column" spacing={1}>
-            <Typography variant="h6" component="h2">
+          <Stack direction="column" spacing={2}>
+            <Typography variant="h6" component="h2" sx={{ textAlign: "center" }}>
               Add Delay Details
             </Typography>
             <TextField
@@ -187,13 +234,22 @@ const Report = () => {
             />
           </Stack>
         </Stack>
-        <Button
-          variant="contained"
-          onClick={handleSave}
-          // disabled={!formData.DepartureDelay}
-        >
-          Save
-        </Button>
+        <Stack direction="row" spacing={5}>
+          <Button
+            variant="contained"
+            onClick={handleSave}
+            disabled={!isFormValid}
+          >
+            Save
+          </Button>
+          <Button
+            variant="contained"
+            onClick={handleClear}
+            color="warning"
+          >
+            Clear
+          </Button>
+        </Stack>
       </Box>
     </div>
   )

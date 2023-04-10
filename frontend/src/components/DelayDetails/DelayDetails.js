@@ -45,7 +45,7 @@ const DelayDetails = ({ data, handleClose, handleUpdate }) => {
 		setChecked(event.target.checked);
 		setFormData((prevData) => ({
 			...prevData,
-			[name]: checked,
+			[name]: event.target.checked,
 		}));
 		// console.log(formData)
 	};
