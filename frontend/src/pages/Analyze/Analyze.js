@@ -46,10 +46,12 @@ const Analyze = ({ airports }) => {
       if (res.data.success) {
         setAQ2Data(res.data.result);
         console.log(res.data.result);
-        setIsLoadingAQ2(false);
+        
       } else {
+        setAQ2Data([]);
         console.log("failed aq2")
       }
+      setIsLoadingAQ2(false);
     } catch (err) {
       console.error(err)
     }
@@ -63,7 +65,7 @@ const Analyze = ({ airports }) => {
         <div>
           {!isLoadingAQ1 ? (<List component='ol'>
             {AQ1Data.map((airline, index) => (
-              <ListItemText primary={`${index + 1}. ${airline.Airline}`} secondary={`${airline.AirlineIATA}, ${airline.avgDepartureDelay} minutes`} />
+              <ListItemText key={index} primary={`${index + 1}. ${airline.Airline}`} secondary={`${airline.AirlineIATA}, ${airline.avgDepartureDelay} minutes`} />
             ))}
           </List>) : <CircularProgress />}
         </div>
@@ -87,7 +89,7 @@ const Analyze = ({ airports }) => {
         <div>
           {!isLoadingAQ2 ? (<List component='ol'>
             {AQ2Data.map((airline, index) => (
-              <ListItemText primary={`${index + 1}. ${airline.Airline}`} secondary={`${airline.AirlineIATA}, ${airline.FlightCount.toLocaleString()} flights`} />
+              <ListItemText key={index} primary={`${index + 1}. ${airline.Airline}`} secondary={`${airline.AirlineIATA}, ${airline.FlightCount.toLocaleString()} flights`} />
             ))}
           </List>) : <CircularProgress />}
         </div>
