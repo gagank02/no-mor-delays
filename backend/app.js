@@ -62,6 +62,25 @@ app.get('/airports', function (req, res) {
     });
 });
 
+app.get('/airlines', function (req, res) {
+    var sql = 'SELECT * FROM Airlines;';
+    console.log(sql);
+    connection.query(sql, function (err, result) {
+        if (err) {
+            res.send(err);
+            return;
+        }
+        if (result[0] != null) {
+            console.log('Found Airline Data');
+            console.log(result);
+            res.json({ 'success': true, 'result': result })
+        } else {
+            console.log('No Data Found');
+            res.json({ 'success': false, 'result': 'No Data was found!' })
+        }
+    });
+});
+
 app.get('/delays', function (req, res) {
     var sql = `SELECT * FROM Delays WHERE OriginAirportIATACode LIKE "${req.query.origin}" AND DestinationAirportIATACode LIKE "${req.query.dest}" ORDER BY Date DESC;`;
     console.log(sql);
@@ -111,14 +130,23 @@ app.put('/delays', function (req, res) {
 });
 
 app.delete('/delays', function (req, res) {
-    var sql = `DELETE FROM Delays WHERE FlightNum=${req.body.flightnum} AND Date=${req.body.date} AND ScheduledDepartureTime=${req.body.depttime} AND OriginAirportIATACode=${req.body.org} AND DestinationAirportIATACode=${req.body.dest};`;
+    var sql = `
+        DELETE FROM Delays 
+        WHERE FlightNum = ${req.body.FlightNum} 
+        AND DATE_FORMAT(Date, '%Y-%m-%d') = DATE_FORMAT(STR_TO_DATE('${req.body.Date}', '%Y-%m-%dT%H:%i:%s.%fZ'), '%Y-%m-%d')
+            AND ScheduledDepartureTime LIKE "${req.body.ScheduledDepartureTime}"
+            AND OriginAirportIATACode LIKE "${req.body.OriginAirportIATACode}" 
+            AND DestinationAirportIATACode LIKE "${req.body.DestinationAirportIATACode}";
+    `;
+
     console.log(sql);
     connection.query(sql, function (err, result) {
         if (err) {
             res.send(err);
             return;
         }
-        if (result[0] != null) {
+        console.log(result)
+        if (result.affectedRows === 1) {
             console.log('Succesfully Deleted Delay');
             console.log(result);
             res.json({ 'success': true, 'result': result })
@@ -188,23 +216,99 @@ app.get('/adv2', function (req, res) {
 
 /* endpoints for page 3 */
 app.post('/delays', function (req, res) {
-    var sql = `INSERT INTO Delays (FlightNum, ScheduledDepartureTime, Date, OriginAirportIATACode, DestinationAirportIATACode, DepartureDelay, IsCanceled, DelayCancellationReason, AirlineIATA) VALUES (${req.body.flightnum}, ${req.body.depttime}, ${req.body.date}, ${req.body.org}, ${req.body.dest}, ${req.body.deptdelay}, ${req.body.canceled}, ${req.body.cancelreason}, ${req.body.iata});`;
-    console.log(sql);
-    connection.query(sql, function (err, result) {
+    var flightNum = req.body.FlightNum;
+    var scheduledDepartureTime = req.body.ScheduledDepartureTime;
+    var date = req.body.Date;
+    var originAirportIATACode = req.body.OriginAirportIATACode;
+    var destinationAirportIATACode = req.body.DestinationAirportIATACode;
+    var departureDelay = req.body.DepartureDelay;
+    var isCanceled = req.body.IsCanceled;
+    var delayCancellationReason = req.body.DelayCancellationReason;
+    var airlineIATA = req.body.AirlineIATA;
+
+    // Check if FlightNum exists in FlightRoutes
+    var checkFlightNumQuery = `SELECT * FROM FlightRoutes WHERE FlightNumber = ${flightNum}`;
+    connection.query(checkFlightNumQuery, function (err, rows, fields) {
         if (err) {
+            console.log(err);
             res.send(err);
             return;
         }
-        if (result[0] != null) {
-            console.log('Succesfully Updated Delay Status');
-            console.log(result);
-            res.json({ 'success': true, 'result': result })
+
+        // If FlightNum does not exist, insert it
+        if (rows.length == 0) {
+            var insertFlightNumQuery = `
+                INSERT INTO FlightRoutes (
+                    FlightNumber,
+                    ScheduledDepartureTime,
+                    RelevantDate,
+                    AirlineIATA,
+                    ScheduledFlightDuration
+                ) VALUES (
+                    ${flightNum},
+                    '${scheduledDepartureTime}',
+                    '${date}',
+                    '${airlineIATA}',
+                    0
+                )
+            `;
+            connection.query(insertFlightNumQuery, function (err, result) {
+                if (err) {
+                    console.log(err);
+                    res.send(err);
+                    return;
+                }
+                console.log(`FlightNum ${flightNum} inserted successfully`);
+                insertDelay();
+            });
         } else {
-            console.log('Could Not Update Delays Status');
-            res.json({ 'success': false, 'result': 'Could Not Update Delays Status!' })
+            insertDelay();
         }
     });
+
+    function insertDelay() {
+        var insertDelayQuery = `
+            INSERT INTO Delays (
+                FlightNum,
+                ScheduledDepartureTime,
+                Date,
+                OriginAirportIATACode,
+                DestinationAirportIATACode,
+                DepartureDelay,
+                IsCanceled,
+                DelayCancellationReason,
+                AirlineIATA
+            ) VALUES (
+                ${flightNum},
+                '${scheduledDepartureTime}',
+                '${date}',
+                '${originAirportIATACode}',
+                '${destinationAirportIATACode}',
+                ${departureDelay},
+                ${isCanceled},
+                ${delayCancellationReason ? "'" + delayCancellationReason + "'" : null},
+                '${airlineIATA}'
+            )
+        `;
+        connection.query(insertDelayQuery, function (err, result) {
+            if (err) {
+                console.log(err)
+                res.send(err);
+                return;
+            }
+            console.log(result)
+            if (result.affectedRows === 1) {
+                console.log('Succesfully Inserted Delay');
+                console.log(result);
+                res.json({ 'success': true, 'result': result })
+            } else {
+                console.log('Could not insert delay');
+                res.json({ 'success': false, 'result': 'Could not insert delay' })
+            }
+        });
+    }
 });
+
 
 app.get('/status', (req, res) => res.send('Working!'));
 

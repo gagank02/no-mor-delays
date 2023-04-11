@@ -46,7 +46,7 @@ function calculateAdjustedTime(timeStr, departureDelay) {
 	return adjustedtime;
 }
 
-const FlightTableRow = ({ row, handleUpdate }) => {
+const FlightTableRow = ({ row, handleUpdate, deleteRow }) => {
 	const [open, setOpen] = useState(false);
 	const [isEditing, setIsEditing] = useState(false);
 	const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
@@ -56,9 +56,10 @@ const FlightTableRow = ({ row, handleUpdate }) => {
 		setIsEditing(true);
 	}
 
-	const handleDelete = () => {
+	const handleDelete = async () => {
 		// delete delay through api
-		console.log("delete");
+		await deleteRow(row);
+		console.log("post-delete");
 		setOpenDeleteDialog(false);
 	}
 

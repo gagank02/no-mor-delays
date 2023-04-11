@@ -7,12 +7,14 @@ import {
   Switch,
   FormControlLabel,
   Stack,
-  Button
+  Button,
+  Alert,
+  AlertTitle
 } from '@mui/material'
-import { airports, airlines } from '../../dummyData';
+import axios from 'axios';
 
 const defaultFormData = {
-  "FlightNumber": '',
+  "FlightNum": '',
   "ScheduledDepartureTime": "",
   "Date": "",
   "OriginAirportIATACode": "",
@@ -23,9 +25,10 @@ const defaultFormData = {
   "AirlineIATA": ""
 }
 
-const Report = () => {
+const Report = ({ airports, airlines }) => {
   const [formData, setFormData] = useState(defaultFormData);
-  const [checked, setChecked] = useState(formData.IsCanceled)
+  const [checked, setChecked] = useState(formData.IsCanceled);
+  const [showAlert, setShowAlert] = useState(false);
 
   const airportIATACodes = airports.map((airport) => airport.IATACode);
 
@@ -39,22 +42,26 @@ const Report = () => {
 
   const handleSwitchChange = (event) => {
     const { name } = event.target;
+    
     setChecked(event.target.checked);
+    console.log(checked ? 1 : 0)
     setFormData((prevData) => ({
       ...prevData,
-      [name]: checked,
+      [name]: checked ? 1 : 0,
     }));
   };
 
   const handleTimeChange = (event) => {
     const time = event.target.value;
-    const revertedTime = time.slice(0, 2) + time.slice(3);
+    const revertedTime = "00:" + time;
+    console.log(time, revertedTime)
     setFormData({ ...formData, ScheduledDepartureTime: revertedTime });
   }
 
   function formatTime(timeString) {
-    let formattedTime = timeString.slice(0, 2) + ":" + timeString.slice(2);
-    return formattedTime;
+    const [days, hours, minutes] = timeString.split(':');
+
+    return hours + ':' + minutes;
   }
 
   const handleAirportChange = (field, value) => {
@@ -79,7 +86,7 @@ const Report = () => {
   }
 
   const isFormValid =
-    formData.FlightNumber &&
+    formData.FlightNum &&
     formData.Date &&
     formData.ScheduledDepartureTime &&
     formData.OriginAirportIATACode &&
@@ -91,6 +98,18 @@ const Report = () => {
     try {
       console.log(formData);
       // save data w/ await and then close
+      console.log("report")
+      const res = await axios.post("http://localhost:5001/delays", formData);
+      if (res.data.success) {
+        console.log("report successful");
+        handleClear();
+        setShowAlert(true);
+        setTimeout(() => {
+          setShowAlert(false);
+        }, 5000);
+      } else {
+        console.log("error with updating");
+      }
     } catch (err) {
       console.error(err)
     }
@@ -118,9 +137,9 @@ const Report = () => {
             </Typography>
             <TextField
               label="Flight Number"
-              name="FlightNumber"
+              name="FlightNum"
               type="number"
-              value={formData.FlightNumber}
+              value={formData.FlightNum}
               onChange={handleChange}
               InputProps={{
                 inputProps: {
@@ -165,9 +184,10 @@ const Report = () => {
               )}
               value={formData.DestinationAirportIATACode || null}
             />
+
             <Autocomplete
               options={airlines}
-              getOptionLabel={(airline) => airline.AirlineName}
+              getOptionLabel={(airline) => airline.Airline}
               onChange={handleAirlineChange}
               renderInput={(params) => (
                 <TextField required {...params} name="AirlineIATA" label="Airline" variant="outlined" />
@@ -177,6 +197,7 @@ const Report = () => {
                   ? airlines.find((airline) => airline.IATACode === formData.AirlineIATA)
                   : null
               }
+
             />
           </Stack>
           <Stack direction="column" spacing={2}>
@@ -251,6 +272,12 @@ const Report = () => {
           </Button>
         </Stack>
       </Box>
+      {showAlert && (
+        <Alert onClose={() => setShowAlert(false)} severity="success" sx={{ position: "fixed", bottom: 0, left: 0, right: 0 }}>
+          <AlertTitle>Success</AlertTitle>
+          Your flight and delay details were added!
+        </Alert>
+      )}
     </div>
   )
 }
