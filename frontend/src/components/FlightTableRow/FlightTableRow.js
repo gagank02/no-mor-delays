@@ -17,11 +17,22 @@ import DeleteDialog from '../DeleteDialog/DeleteDialog';
 
 /** https://mui.com/material-ui/react-table/ */
 
-function formatTime(time) {
-	let hour = time.substr(0, 2);
-	let minute = time.substr(2, 2);
+function formatDate(dateStr) {
+  const options = { 
+    month: 'long', 
+    day: 'numeric', 
+    year: 'numeric'
+  };
+  const date = new Date(dateStr);
+  return date.toLocaleString('en-US', options);
+}
 
-	return hour + ':' + minute;
+function formatTime(time) {
+	const [days, hours, minutes] = time.split(':');
+	// let hour = time.substr(3, 5);
+	// let minute = time.substr(5, 2);
+
+	return hours + ':' + minutes;
 }
 
 function calculateAdjustedTime(timeStr, departureDelay) {
@@ -67,12 +78,12 @@ const FlightTableRow = ({ row, handleUpdate }) => {
 					</IconButton>
 				</TableCell>
 				<TableCell component="th" scope="row">
-					{row.FlightNumber}
+					{row.FlightNum}
 				</TableCell>
 				<TableCell>{row.OriginAirportIATACode}</TableCell>
 				<TableCell>{row.DestinationAirportIATACode}</TableCell>
 				<TableCell>{row.AirlineIATA}</TableCell>
-				<TableCell>{row.Date}</TableCell>
+				<TableCell>{formatDate(row.Date)}</TableCell>
 				<TableCell>{formatTime(row.ScheduledDepartureTime)}</TableCell>
 				<TableCell>
 					{
@@ -113,7 +124,7 @@ const FlightTableRow = ({ row, handleUpdate }) => {
 									</TableRow>
 								</TableHead>
 								<TableBody>
-									<TableRow key={row.FlightNumber}>
+									<TableRow key={row.FlightNum}>
 										<TableCell component="th" scope="row">
 											{row.DepartureDelay} min
 										</TableCell>
@@ -141,7 +152,7 @@ const FlightTableRow = ({ row, handleUpdate }) => {
 
 FlightTableRow.propTypes = {
 	row: PropTypes.shape({
-		FlightNumber: PropTypes.number.isRequired,
+		FlightNum: PropTypes.number.isRequired,
 		ScheduledDepartureTime: PropTypes.string.isRequired,
 		Date: PropTypes.string.isRequired,
 		OriginAirportIATACode: PropTypes.string.isRequired,
@@ -152,15 +163,5 @@ FlightTableRow.propTypes = {
 		AirlineIATA: PropTypes.string.isRequired,
 	}).isRequired,
 };
-
-// "FlightNumber": 1415,
-// "ScheduledDepartureTime": "1149",
-// "Date": "2015-01-01",
-// "OriginAirportIATACode": "IAH",
-// "DestinationAirportIATACode": "PHX",
-// "DepartureDelay": 0.0,
-// "IsCanceled": false,
-// "DelayCancellationReason": null,
-// "AirlineIATA": "UA"
 
 export default FlightTableRow;

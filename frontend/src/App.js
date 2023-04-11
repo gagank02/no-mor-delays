@@ -8,15 +8,32 @@ import {
   Routes,
   Route,
 } from "react-router-dom";
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 function App() {
+  const [airports, setAirports] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+      const res = await axios.get("http://localhost:5001/airports");
+      setAirports(res.data.result);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchData();
+  }, [])
+
   return (
     <Router>
       <div className="container">
         <Navbar />
         <Routes>
-          <Route path="/search" element={<Search />} />
-          <Route path="/" element={<Search />} />
+          <Route path="/search" element={<Search airports={airports}/>} />
+          <Route path="/" element={<Search airports={airports}/>} />
           <Route path="/analyze" element={<Analyze />} />
           <Route path="/report" element={<Report />} />
         </Routes>
