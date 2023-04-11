@@ -45,7 +45,7 @@ function App() {
         <Routes>
           <Route path="/search" element={<Search airports={airports}/>} />
           <Route path="/" element={<Search airports={airports}/>} />
-          <Route path="/analyze" element={<Analyze />} />
+          <Route path="/analyze" element={<Analyze airports={airports}/>} />
           <Route path="/report" element={<Report airports={airports} airlines={airlines}/>} />
         </Routes>
       </div>
