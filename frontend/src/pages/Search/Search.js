@@ -1,12 +1,10 @@
 import { useEffect, useState } from 'react'
-import { delay_data } from '../../dummyData'
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import Button from '@mui/material/Button';
 import styles from './Search.module.css'
 import FlightTable from '../../components/FlightTable/FlightTable';
 import { CircularProgress, Typography } from '@mui/material';
-import FlightTableRow from '../../components/FlightTableRow/FlightTableRow';
 import axios from 'axios'
 
 const Search = ({ airports }) => {
@@ -43,15 +41,30 @@ const Search = ({ airports }) => {
 		console.log("update")
 		try {
 			const res = await axios.put("http://localhost:5001/delays", updatedFlight);
-			console.log(res.data.result)
 			if (res.data.success) {
 				handleSearch();
 			} else {
-				console.log("error with updating")
-				
+				console.log("error with updating");
 			}
 		} catch (err) {
 			console.error(err)
+		}
+	}
+
+	const deleteRow = async (rowToBeRemoved) => {
+		console.log("delete");
+		console.log(rowToBeRemoved)
+		try {
+			const res = await axios.delete("http://localhost:5001/delays", {
+				data: rowToBeRemoved
+			});
+			if (res.data.success) {
+				handleSearch();
+			} else {
+				console.log("error with deleting");
+			}
+		} catch (err) {
+			console.error(err);
 		}
 	}
 
@@ -115,8 +128,7 @@ const Search = ({ airports }) => {
 					<CircularProgress />
 				</div>
 			) : (
-				<FlightTable data={flightData} handleUpdate={handleRowUpdate} />
-				// <FlightTableRow row={delay_data[0]} />
+				<FlightTable data={flightData} handleUpdate={handleRowUpdate} deleteRow={deleteRow}/>
 			)}
 		</div>
 	)

@@ -9,7 +9,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { Pagination } from '@mui/material';
 
-const FlightTable = ({ data, handleUpdate }) => {
+const FlightTable = ({ data, handleUpdate, deleteRow }) => {
 	const [page, setPage] = useState(1);
 	const rowsPerPage = 5;
 	const totalRows = data.length;
@@ -46,6 +46,7 @@ const FlightTable = ({ data, handleUpdate }) => {
 									key={`${row.FlightNum}-${row.Date}-${row.ScheduledDepartureTime}-${row.OriginAirportIATACode}-${row.DestinationAirportIATACode}`}
 									row={row}
 									handleUpdate={handleUpdate}
+									deleteRow={deleteRow}
 								/>
 							))
 						) : (

@@ -111,14 +111,23 @@ app.put('/delays', function (req, res) {
 });
 
 app.delete('/delays', function (req, res) {
-    var sql = `DELETE FROM Delays WHERE FlightNum=${req.body.flightnum} AND Date=${req.body.date} AND ScheduledDepartureTime=${req.body.depttime} AND OriginAirportIATACode=${req.body.org} AND DestinationAirportIATACode=${req.body.dest};`;
+    var sql = `
+        DELETE FROM Delays 
+        WHERE FlightNum = ${req.body.FlightNum} 
+        AND DATE_FORMAT(Date, '%Y-%m-%d') = DATE_FORMAT(STR_TO_DATE('${req.body.Date}', '%Y-%m-%dT%H:%i:%s.%fZ'), '%Y-%m-%d')
+            AND ScheduledDepartureTime LIKE "${req.body.ScheduledDepartureTime}"
+            AND OriginAirportIATACode LIKE "${req.body.OriginAirportIATACode}" 
+            AND DestinationAirportIATACode LIKE "${req.body.DestinationAirportIATACode}";
+    `;
+
     console.log(sql);
     connection.query(sql, function (err, result) {
         if (err) {
             res.send(err);
             return;
         }
-        if (result[0] != null) {
+        console.log(result)
+        if (result.affectedRows === 1) {
             console.log('Succesfully Deleted Delay');
             console.log(result);
             res.json({ 'success': true, 'result': result })
