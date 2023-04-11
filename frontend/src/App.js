@@ -13,9 +13,10 @@ import axios from 'axios';
 
 function App() {
   const [airports, setAirports] = useState([]);
+  const [airlines, setAirlines] = useState([]);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchAirports = async () => {
       try {
       const res = await axios.get("http://localhost:5001/airports");
       setAirports(res.data.result);
@@ -24,7 +25,17 @@ function App() {
       }
     };
 
-    fetchData();
+    const fetchAirlines = async () => {
+      try {
+      const res = await axios.get("http://localhost:5001/airlines");
+      setAirlines(res.data.result);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchAirports();
+    fetchAirlines();
   }, [])
 
   return (
@@ -35,7 +46,7 @@ function App() {
           <Route path="/search" element={<Search airports={airports}/>} />
           <Route path="/" element={<Search airports={airports}/>} />
           <Route path="/analyze" element={<Analyze />} />
-          <Route path="/report" element={<Report />} />
+          <Route path="/report" element={<Report airports={airports} airlines={airlines}/>} />
         </Routes>
       </div>
     </Router>
