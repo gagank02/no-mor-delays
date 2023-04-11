@@ -41,12 +41,24 @@ const Search = ({ airports }) => {
 	const handleRowUpdate = async (updatedFlight) => {
 		// updateFlights
 		console.log("update")
+		try {
+			const res = await axios.put("http://localhost:5001/delays", updatedFlight);
+			console.log(res.data.result)
+			if (res.data.success) {
+				handleSearch();
+			} else {
+				console.log("error with updating")
+				
+			}
+		} catch (err) {
+			console.error(err)
+		}
 	}
 
 	const handleClear = () => {
 		setOriginAirport(null);
 		setDestAirport(null);
-		setFlightData(null);
+		setFlightData([]);
 	}
 
 	return (

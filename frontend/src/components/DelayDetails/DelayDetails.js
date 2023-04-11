@@ -9,7 +9,8 @@ import {
 	Switch,
 	FormControlLabel,
 	Stack,
-	Button
+	Button,
+	CircularProgress
 } from '@mui/material'
 
 const DelayDetails = ({ data, handleClose, handleUpdate }) => {
@@ -29,7 +30,8 @@ const DelayDetails = ({ data, handleClose, handleUpdate }) => {
 	};
 
 	const [formData, setFormData] = useState(data);
-	const [checked, setChecked] = useState(formData.IsCanceled)
+	const [checked, setChecked] = useState(formData.IsCanceled ? true : false)
+	const [loading, setLoading] = useState(false);
 
 	const handleChange = (event) => {
 		const { name, value } = event.target;
@@ -42,28 +44,29 @@ const DelayDetails = ({ data, handleClose, handleUpdate }) => {
 	const handleSwitchChange = (event) => {
 		const { name } = event.target;
 		// console.log(event.target.checked)
-		setChecked(event.target.checked);
+		const isChecked = event.target.checked ? true : false;
+		setChecked(isChecked);
 		setFormData((prevData) => ({
 			...prevData,
-			[name]: event.target.checked,
+			[name]: isChecked,
 		}));
-		// console.log(formData)
 	};
 
 	const handleSave = async () => {
 		try {
 			console.log(formData);
 			// update data w/ await and then close
+			setLoading(true);
 			await handleUpdate(formData);
+			setLoading(false);
 			handleClose();
 		} catch (err) {
 			console.error(err)
 		}
-
 	}
 
 	return (
-		<div >
+		<div>
 			<Modal
 				open
 				onClose={handleClose}
@@ -76,7 +79,7 @@ const DelayDetails = ({ data, handleClose, handleUpdate }) => {
 				}}
 			>
 				<Fade in>
-					<Box sx={style}>
+					{!loading ? (<Box sx={style}>
 						<Typography variant="h6" component="h2">
 							Edit Delay Details
 						</Typography>
@@ -136,7 +139,18 @@ const DelayDetails = ({ data, handleClose, handleUpdate }) => {
 						>
 							Save
 						</Button>
-					</Box>
+					</Box>) :
+						(<div
+							sx={{
+								display: 'flex',
+								alignItems: 'center',
+								justifyContent: 'center',
+								height: '100%',
+							}}
+						>
+							<CircularProgress />
+						</div>
+						)}
 				</Fade>
 			</Modal>
 		</div>
