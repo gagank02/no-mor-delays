@@ -9,7 +9,8 @@ let connection = mysql.createConnection({
     host: process.env.host,
     user: process.env.user,
     password: process.env.password,
-    database: process.env.database
+    database: process.env.database,
+    dateStrings: true
 });
 
 connection.connect(function (err) {
@@ -80,14 +81,25 @@ app.get('/delays', function (req, res) {
 });
 
 app.put('/delays', function (req, res) {
-    var sql = `UPDATE Delays SET IsCanceled=${req.body.iscanceled} WHERE FlightNum=${req.body.flightnum} AND Date=${req.body.date} AND ScheduledDepartureTime=${req.body.depttime} AND OriginAirportIATACode=${req.body.org} AND DestinationAirportIATACode=${req.body.dest};`;
+    var sql = `
+        UPDATE Delays 
+        SET DepartureDelay = ${req.body.DepartureDelay}, 
+            IsCanceled = ${req.body.IsCanceled}, 
+            DelayCancellationReason = ${req.body.DelayCancellationReason} 
+        WHERE FlightNum = ${req.body.FlightNum} 
+        AND DATE_FORMAT(Date, '%Y-%m-%d') = DATE_FORMAT(STR_TO_DATE('${req.body.Date}', '%Y-%m-%dT%H:%i:%s.%fZ'), '%Y-%m-%d')
+            AND ScheduledDepartureTime LIKE "${req.body.ScheduledDepartureTime}"
+            AND OriginAirportIATACode LIKE "${req.body.OriginAirportIATACode}" 
+            AND DestinationAirportIATACode LIKE "${req.body.DestinationAirportIATACode}";
+    `;
     console.log(sql);
     connection.query(sql, function (err, result) {
         if (err) {
             res.send(err);
             return;
         }
-        if (result[0] != null) {
+        console.log(result)
+        if (result.changedRows > 0) {
             console.log('Succesfully Updated Delay Status');
             console.log(result);
             res.json({ 'success': true, 'result': result })

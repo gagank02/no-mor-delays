@@ -52,6 +52,7 @@ const FlightTableRow = ({ row, handleUpdate }) => {
 	const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
 	const handleEdit = () => {
+		console.log(row)
 		setIsEditing(true);
 	}
 
@@ -158,7 +159,7 @@ FlightTableRow.propTypes = {
 		OriginAirportIATACode: PropTypes.string.isRequired,
 		DestinationAirportIATACode: PropTypes.string.isRequired,
 		DepartureDelay: PropTypes.number.isRequired,
-		IsCanceled: PropTypes.bool.isRequired,
+		IsCanceled: PropTypes.number.isRequired,
 		DelayCancellationReason: PropTypes.string,
 		AirlineIATA: PropTypes.string.isRequired,
 	}).isRequired,
