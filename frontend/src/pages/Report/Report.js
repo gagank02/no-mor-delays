@@ -7,7 +7,9 @@ import {
   Switch,
   FormControlLabel,
   Stack,
-  Button
+  Button,
+  Alert,
+  AlertTitle
 } from '@mui/material'
 import axios from 'axios';
 
@@ -26,6 +28,7 @@ const defaultFormData = {
 const Report = ({ airports, airlines }) => {
   const [formData, setFormData] = useState(defaultFormData);
   const [checked, setChecked] = useState(formData.IsCanceled);
+  const [showAlert, setShowAlert] = useState(false);
 
   const airportIATACodes = airports.map((airport) => airport.IATACode);
 
@@ -68,18 +71,6 @@ const Report = ({ airports, airlines }) => {
     }));
   }
 
-//   VALUES (
-//     241,
-//     "00:17:35",
-//     "2015-01-13",
-//     "ORD",
-//     "LAX",
-//     14,
-//     0,
-//     null,
-//     "VX"
-// );
-
   const handleAirlineChange = (event, value) => {
     if (value) {
       setFormData({
@@ -112,6 +103,10 @@ const Report = ({ airports, airlines }) => {
       if (res.data.success) {
         console.log("report successful");
         handleClear();
+        setShowAlert(true);
+        setTimeout(() => {
+          setShowAlert(false);
+        }, 5000);
       } else {
         console.log("error with updating");
       }
@@ -277,6 +272,12 @@ const Report = ({ airports, airlines }) => {
           </Button>
         </Stack>
       </Box>
+      {showAlert && (
+        <Alert onClose={() => setShowAlert(false)} severity="success" sx={{ position: "fixed", bottom: 0, left: 0, right: 0 }}>
+          <AlertTitle>Success</AlertTitle>
+          Your flight and delay details were added!
+        </Alert>
+      )}
     </div>
   )
 }
