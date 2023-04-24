@@ -3,10 +3,10 @@ var bodyParser = require('body-parser');
 var mysql = require('mysql2');
 var path = require('path');
 var connection = mysql.createConnection({
-                host: '34.28.67.54',
-                user: 'root',
-                password: 'flannel',
-                database: 'full'
+                host: '',
+                user: '',
+                password: '',
+                database: ''
 });
 var cors = require('cors');
 
