@@ -13,22 +13,17 @@ CREATE TRIGGER `ExistingUserCheck`
         -- if the username does not exist in Users
         IF @username IS NULL THEN
             SET @userid = (SELECT count(*) + 1 FROM Users)$$
-            IF (new.FirstName IS NOT NULL) AND (new.LastName IS NOT NULL THEN)
-                INSERT INTO Users VALUES(@userid, new.UserName, new.Password, new.FirstName, new.LastName)$$
-            END IF$$
-            ELSE
-                INSERT INTO Users VALUES(@userid, new.UserName, new.Password)$$
-            END ELSE$$
+            INSERT INTO Users VALUES(@userid, new.UserName, new.Password)$$
         END IF$$
         
         ELSE 
         -- if the username already exists in Users
             SET @password = (SELECT Password FROM Users WHERE UserName = new.UserName)$$
             IF @password != new.Password
-                SIGNAL SQLSTATE `45000` SET MESSAGE_TEXT = "User Name Is Already Taken. Please Enter A New User Name"$$
+                SIGNAL SQLSTATE `45000` SET MESSAGE_TEXT = "Password Is Incorrect. Please Try Again"$$
             END IF$$
             IF @password = new.Password THEN 
-                SIGNAL SQLSTATE `45000` SET MESSAGE_TEXT = "Account Already Exists. Please Use The Log-In Page"$$
+                SIGNAL SQLSTATE `45000` SET MESSAGE_TEXT = "You Are Successfully Logged In"$$
             END IF$$
         END ELSE$$
     END$$
