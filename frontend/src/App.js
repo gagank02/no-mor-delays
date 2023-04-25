@@ -10,6 +10,7 @@ import {
 } from "react-router-dom";
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import Login from './pages/Login/Login';
 
 function App() {
   const [airports, setAirports] = useState([]);
@@ -47,6 +48,7 @@ function App() {
           <Route path="/" element={<Search airports={airports}/>} />
           <Route path="/analyze" element={<Analyze airports={airports}/>} />
           <Route path="/report" element={<Report airports={airports} airlines={airlines}/>} />
+          <Route path="/login" element={<Login />} />
         </Routes>
       </div>
     </Router>
