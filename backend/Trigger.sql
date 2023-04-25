@@ -1,9 +1,6 @@
--- this will be used when the user is attempting to make a new account
--- this will check to see if the username already exists.
--- if so, and the user does not put in the corresponding password, 
--- then the user will be added to the Users with all the fields
--- if the user puts in an existing username and corresponding password, 
--- user will not be added and error will be outputed
+-- when user with nonexisting username tries to login, an account will be created for them
+-- when user with an existing account tries to login but password is incorrect, an error is generated
+-- when user with existing account logs in with correct password, success message generated
 DELIMITER $$
 CREATE TRIGGER `ExistingUserCheck`
     BEFORE INSERT ON `Users`
