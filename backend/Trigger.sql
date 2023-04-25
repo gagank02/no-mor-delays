@@ -20,13 +20,16 @@ CREATE TRIGGER `ExistingUserCheck`
                 INSERT INTO Users VALUES(@userid, new.UserName, new.Password)$$
             END ELSE$$
         END IF$$
+        
+        ELSE 
         -- if the username already exists in Users
-        SET @password = (SELECT Password FROM Users WHERE UserName = new.UserName)$$
-        IF @password IS NULL THEN
-             SIGNAL SQLSTATE `45000` SET MESSAGE_TEXT = "User Name Is Already Taken. Please Enter A New User Name"$$
-        END IF$$
-        IF @password = new.Password THEN 
-            SIGNAL SQLSTATE `45000` SET MESSAGE_TEXT = "Account Already Exists. Please Use The Log-In Page"$$
-        END IF$$
+            SET @password = (SELECT Password FROM Users WHERE UserName = new.UserName)$$
+            IF @password != new.Password
+                SIGNAL SQLSTATE `45000` SET MESSAGE_TEXT = "User Name Is Already Taken. Please Enter A New User Name"$$
+            END IF$$
+            IF @password = new.Password THEN 
+                SIGNAL SQLSTATE `45000` SET MESSAGE_TEXT = "Account Already Exists. Please Use The Log-In Page"$$
+            END IF$$
+        END ELSE$$
     END$$
 DELIMITER ;
