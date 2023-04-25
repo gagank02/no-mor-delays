@@ -15,6 +15,7 @@ const Navbar = () => {
 				<Link to="/search">Search</Link>
 				<Link to="/analyze">Analyze</Link>
 				<Link to="/report">Report a Delay</Link>
+				<Link to="/visualize">Visualize</Link>
 				{user
 					? (<Link onClick={logout} className={styles.logout}>Logout</Link>)
 					: (<Link to="/login" className={styles.login}>Login</Link>)

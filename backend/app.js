@@ -310,6 +310,45 @@ app.post('/delays', function (req, res) {
 	}
 });
 
+// EC: Visualize API
+app.get('/visualize', function (req, res) {
+	var sql = `
+	SELECT 
+		a.IATACode, 
+		a.AirportName, 
+		COUNT(*) AS totalDelays, 
+		AVG(d.DepartureDelay) as avgDelay,
+		LargeDelays.numLargeDelays
+	FROM 
+		Delays d JOIN Airports a ON d.OriginAirportIATACode = a.IATACode, 
+		(
+			SELECT a2.IATACode, COUNT(*) as numLargeDelays
+			FROM Delays d2 JOIN Airports a2 ON d2.OriginAirportIATACode = a2.IATACode
+			WHERE d2.DepartureDelay >= 15
+			GROUP BY a2.IATACode
+		) AS LargeDelays
+	WHERE a.IATACode = LargeDelays.IATACode
+	GROUP BY a.IATACode
+	ORDER BY a.IATACode
+  `
+
+	console.log(sql);
+	connection.query(sql, function (err, result) {
+		if (err) {
+			res.send(err)
+			return;
+		}
+
+		if (result[0] != null) {
+			console.log('Found Visualize Data');
+			console.log(result);
+			res.json({ 'success': true, 'result': result });
+		} else {
+			console.log('No Data Found for Visualize');
+			res.json({ 'success': false, 'result': 'No Visualize Data was found!' })
+		}
+	})
+});
 
 app.get('/status', (req, res) => res.send('Working!'));
 

@@ -44,6 +44,7 @@ const Login = () => {
                     value={username}
                     onChange={(event) => setUsername(event.target.value)}
                     sx={{ width: '100%' }}
+                    required
                 />
                 <TextField
                     label="Password"
@@ -61,16 +62,22 @@ const Login = () => {
                     value={password}
                     onChange={(event) => setPassword(event.target.value)}
                     sx={{ width: '100%' }}
+                    required
                 />
                 <Button
                     variant="contained"
                     color="primary"
                     type="submit"
                     onClick={handleSubmit}
+                    disabled={!username || !password}
                 >
                     Login
                 </Button>
+                <Typography sx={{ width: '300px', textAlign: 'center' }} variant="p" component="p">
+                    *Note: Any usernames entered that do not exist, will be made into a new user account with the provided Username and Password.
+                </Typography>
             </Box>
+
         </div>
     )
 }

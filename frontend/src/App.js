@@ -11,6 +11,7 @@ import {
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Login from './pages/Login/Login';
+import Visualize from './pages/Visualize/Visualize';
 
 function App() {
   const [airports, setAirports] = useState([]);
@@ -49,6 +50,7 @@ function App() {
           <Route path="/analyze" element={<Analyze airports={airports}/>} />
           <Route path="/report" element={<Report airports={airports} airlines={airlines}/>} />
           <Route path="/login" element={<Login />} />
+          <Route path="/visualize" element={<Visualize />} />
         </Routes>
       </div>
     </Router>
