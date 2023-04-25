@@ -19,6 +19,7 @@ CREATE TRIGGER `ExistingUserCheck`
             ELSE
                 INSERT INTO Users VALUES(@userid, new.UserName, new.Password)$$
             END ELSE$$
+        END IF$$
         -- if the username already exists in Users
         SET @password = (SELECT Password FROM Users WHERE UserName = new.UserName)$$
         IF @password IS NULL THEN
