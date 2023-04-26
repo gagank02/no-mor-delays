@@ -63,7 +63,8 @@ BEGIN
 
 END;
 
--- CREATE PROCEDURE `Result` ()
+-- CREATE PROCEDURE `Result` (
+    IN requestIATA VARCHAR(3))
 
 -- BEGIN
 --  -- define local vars -- 
