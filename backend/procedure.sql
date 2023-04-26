@@ -45,7 +45,7 @@ BEGIN
     SET varDelayRating = "Relatively Reliable";
   ELSE IF varAvgDepartureDelay > 10 THEN
     SET varDelayRating = "Reliable";
-  ELSE IF varAvgDepartureDelay <= 0 THEN
+  ELSE
     SET varDelayRating = "Most Reliable";
 
   INSERT INTO TmpTable VALUE (varIATA, varAirportName, varDelayRating);
