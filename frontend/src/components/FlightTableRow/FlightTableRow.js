@@ -9,7 +9,7 @@ import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
-import { Button, ButtonBase } from '@mui/material';
+import { Button, Alert } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import DelayDetails from '../DelayDetails/DelayDetails';
@@ -54,6 +54,9 @@ const FlightTableRow = ({ row, handleUpdate, deleteRow }) => {
 	const [isEditing, setIsEditing] = useState(false);
 	const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
+	const [itineraryAddSuccess, setItineraryAddSuccess] = useState(false);
+	const [itineraryAddFail, setItineraryAddFail] = useState(false);
+
 	const handleEdit = () => {
 		console.log(row)
 		setIsEditing(true);
@@ -83,8 +86,11 @@ const FlightTableRow = ({ row, handleUpdate, deleteRow }) => {
 		const res = await axios.post("http://localhost:5001/itinerary", formData);
 		if (res.data.success) {
 			console.log("itineary added");
+			setItineraryAddSuccess(true);
 		} else {
 			console.log("itineary not added");
+			setItineraryAddFail(true);
+
 		}
 	}
 
@@ -175,6 +181,32 @@ const FlightTableRow = ({ row, handleUpdate, deleteRow }) => {
 			)}
 			{openDeleteDialog && (
 				<DeleteDialog open={openDeleteDialog} handleClose={handleCloseDelete} handleDelete={handleDelete} />
+			)}
+			{itineraryAddSuccess && (
+				<Box style={{
+					position: 'absolute',
+					bottom: 0,
+					paddingBottom: '20px',
+					left: '50%',
+					transform: 'translate(-50%, -50%)',
+				}}>
+					<Alert severity='success' variant='filled' onClose={() => setItineraryAddSuccess(false)}>
+						Flight was added to your itineary!
+					</Alert>
+				</Box>
+			)}
+			{itineraryAddFail && (
+				<Box style={{
+					position: 'absolute',
+					bottom: 0,
+					paddingBottom: '20px',
+					left: '50%',
+					transform: 'translate(-50%, -50%)',
+				}}>
+					<Alert severity='error' variant='filled' onClose={() => setItineraryAddFail(false)}>
+						Error adding flight to itineary.
+					</Alert>
+				</Box>
 			)}
 		</>
 	);

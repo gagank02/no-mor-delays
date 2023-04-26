@@ -158,25 +158,36 @@ app.delete('/delays', function (req, res) {
 });
 
 //Adding flight to user's itinerary
-app.post('/itinerary', function(req, res) {
-	// var userid = `SELECT UserID FROM Users WHERE UserName="${req.body.username}";`;
-	
-	var sql = `INSERT INTO Itinerary (UserID, FlightNum, RelevantDate, ScheduledDepartureTime, OriginAirportIATACode, DestinationAirportIATACode) VALUES (${req.body.userid}, ${req.body.flightnum}, "${req.body.date}", "${req.body.depttime}", "${req.body.origin}", "${req.body.dest}");`;
-	console.log(sql);
-	connection.query(sql, function(err, result) {
+app.post('/itinerary', function (req, res) {
+	var userid_sql = `SELECT UserID FROM Users WHERE UserName="${req.body.username}";`;
+
+	connection.query(userid_sql, function (err, r) {
 		if (err) {
 			res.send(err);
 			return;
 		}
-		console.log(result)
-		if (result.affectedRows > 0) {
-			console.log('Succesfully Added Flight To Your Itinerary');
-			console.log(result);
-			res.json({'success': true, 'result': result})
-		} else {
-			console.log('Could Not Add Flight To Itinerary');
-			res.json({'success': false, 'result': 'Could Not Add Flight To Itinerary'})
-		}
+
+		let user_id = r[0].UserID;
+		// console.log(user_id)
+
+		var sql = `INSERT INTO Itinerary (UserID, FlightNum, RelevantDate, ScheduledDepartureTime, OriginAirportIATACode, DestinationAirportIATACode) VALUES (${user_id}, ${req.body.flightnum}, "${req.body.date}", "${req.body.depttime}", "${req.body.origin}", "${req.body.dest}");`;
+		console.log(sql);
+		connection.query(sql, function (err, result) {
+			if (err) {
+				res.send(err);
+				return;
+			}
+			console.log(result)
+			if (result.affectedRows > 0) {
+				console.log('Succesfully Added Flight To Your Itinerary');
+				console.log(result);
+				res.json({ 'success': true, 'result': result })
+			} else {
+				console.log('Could Not Add Flight To Itinerary');
+				res.json({ 'success': false, 'result': 'Could Not Add Flight To Itinerary' })
+			}
+		});
+
 	});
 });
 
@@ -371,6 +382,68 @@ app.get('/visualize', function (req, res) {
 			res.json({ 'success': false, 'result': 'No Visualize Data was found!' })
 		}
 	})
+});
+
+app.get('/login', function (req, res) {
+	console.log(req.query)
+	var UserName = req.query.UserName;
+	var FirstName = req.query.FirstName;
+	var LastName = req.query.LastName;
+	var Password = req.query.Password;
+	if (!FirstName) {
+		FirstName = "Default";
+	}
+	if (!LastName) {
+		LastName = "Default";
+	}
+
+	var userId_sql = `(SELECT count(*) as ID FROM Users)`;
+	connection.query(userId_sql, function (err, r) {
+		if (err) {
+			res.send(err)
+			return;
+		}
+
+		let userId = r[0].ID
+		console.log(userId)
+		var sql = `INSERT INTO Users VALUES ('${userId}', '${UserName}', '${Password}', '${FirstName}', '${LastName}')`;
+
+		console.log(sql);
+		connection.query(sql, function (err, result) {
+			if (err) {
+				if (err.sqlMessage == 'You Are Successfully Logged In') {
+					// console.log("here")
+					let getUserSQL = `SELECT * FROM Users WHERE UserName LIKE "${UserName}";`;
+					connection.query(getUserSQL, function (err, result2) {
+						if (result2[0] != null) {
+							console.log('Found User Data');
+							console.log(result2);
+							res.json({ 'success': true, 'result': result2 });
+						} else {
+							console.log('No Data Found for User');
+							res.json({ 'success': false, 'result': 'No User Data was found!' })
+						}
+					});
+				} else {
+					// console.log(err)
+					res.json({ 'success': false, 'result': 'No User Data was found!' })
+					return;
+				}
+			} else {
+				let getUserSQL = `SELECT * FROM Users WHERE UserName LIKE "${UserName}";;`;
+				connection.query(getUserSQL, function (err, result2) {
+					if (result2[0] != null) {
+						console.log('Found User Data');
+						console.log(result2);
+						res.json({ 'success': true, 'result': result2 });
+					} else {
+						console.log('No Data Found for User');
+						res.json({ 'success': false, 'result': 'No User Data was found!' })
+					}
+				});
+			}
+		});
+	});
 });
 
 app.get('/status', (req, res) => res.send('Working!'));

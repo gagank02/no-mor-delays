@@ -66,7 +66,7 @@ const Visualize = () => {
 						<div>
 							<VictoryChart
 								width={1500}
-								height={750}
+								height={500}
 								domain={{ x: [-20, 100], y: [0, 500] }}
 								theme={VictoryTheme.material}
 								containerComponent={<VictoryZoomContainer zoomDomain={{ x: [-20, 100], y: [0, 500] }} />}

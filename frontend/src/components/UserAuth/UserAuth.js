@@ -8,21 +8,25 @@ const UserAuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
-  const login = (userData) => {
-    // Login user and set user state
-    setUser(userData);
-    navigate('/account');
-  };
-
-  // const login = async (username, password) => {
-  //   try {
-  //     const response = await axios.post('/api/login', { username, password });
-  //     const user = response.data;
-  //     setUser(user);
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
+  // const login = (userData) => {
+  //   // Login user and set user state
+  //   setUser(userData);
+  //   navigate('/account');
   // };
+
+  const login = async (username, password) => {
+    try {
+      const response = await axios.get(
+        'http://localhost:5001/login',
+        { params: {UserName: username, Password: password} }
+      );
+      const user = response.data;
+      console.log(user)
+      // setUser(user);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const logout = () => {
     // Logout user and set user state to null
