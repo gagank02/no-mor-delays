@@ -1,5 +1,5 @@
 DROP PROCEDURE Result;
-CREATE PROCEDURE Result() -- IATA VARCHAR(3) --
+CREATE PROCEDURE Result(requestIATA VARCHAR(3)) 
 
 BEGIN
   -- define local vars -- 
@@ -16,6 +16,7 @@ BEGIN
     FROM Delays d JOIN Aiports a ON (d.OriginAirportIATACode = a.IATACode)
     WHERE d.IsCanceled LIKE 0
     GROUP BY d.OriginAirportIATACode
+    HAVING d.OriginAirportIATACode = requestIATA;
   )  
   
   -- declare cursor handler to figure out when cursor finishes --
