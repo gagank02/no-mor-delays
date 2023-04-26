@@ -4,39 +4,34 @@ import { Typography, TextField, Button, Box, IconButton, InputAdornment } from "
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 
 const Login = () => {
-	const { user, login, logout } = useContext(UserAuth);
+	const { login, signUp } = useContext(UserAuth);
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
+	const [usernameSignUp, setUsernameSignUp] = useState('');
+	const [passwordSignUp, setPasswordSignUp] = useState('');
 	const [firstName, setFirstName] = useState('');
 	const [lastName, setLastName] = useState('');
 	const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+	const [isPasswordSignUpVisible, setIsPasswordSignUpVisible] = useState(false);
 
 	const togglePasswordVisibility = () => {
 		setIsPasswordVisible((prev) => !prev);
 	};
 
+	const togglePasswordSignUpVisibility = () => {
+		setIsPasswordSignUpVisible((prev) => !prev);
+	};
+
 	const handleSubmit = (event) => {
 		event.preventDefault();
-		// Handle form submission
-		// let userData = {
-		// 	'username': username,
-		// 	'password': password,
-		// }
-		// console.log(userData)
-		login(username, password)
+		login(username, password);
+		setUsername('');
+		setPassword('');
 	};
 
 	const handleSignUp = (event) => {
 		event.preventDefault();
-		// Handle form submission
-		let userData = {
-			'firstName': firstName,
-			'lastName': lastName,
-			'username': username,
-			'password': password,
-		}
-		console.log(userData)
-		login(userData)
+		signUp(firstName, lastName, usernameSignUp, passwordSignUp)
 	};
 
 	return (
@@ -87,8 +82,8 @@ const Login = () => {
 						<TextField
 							label="Username"
 							variant="outlined"
-							value={username}
-							onChange={(event) => setUsername(event.target.value)}
+							value={usernameSignUp}
+							onChange={(event) => setUsernameSignUp(event.target.value)}
 							sx={{ width: '100%' }}
 							required
 						/>
@@ -99,14 +94,14 @@ const Login = () => {
 							InputProps={{
 								endAdornment: (
 									<InputAdornment position="end">
-										<IconButton onClick={togglePasswordVisibility} edge="end">
-											{isPasswordVisible ? <VisibilityOff /> : <Visibility />}
+										<IconButton onClick={togglePasswordSignUpVisibility} edge="end">
+											{isPasswordSignUpVisible ? <VisibilityOff /> : <Visibility />}
 										</IconButton>
 									</InputAdornment>
 								),
 							}}
-							value={password}
-							onChange={(event) => setPassword(event.target.value)}
+							value={passwordSignUp}
+							onChange={(event) => setPasswordSignUp(event.target.value)}
 							sx={{ width: '100%' }}
 							required
 						/>
@@ -114,8 +109,8 @@ const Login = () => {
 							variant="contained"
 							color="primary"
 							type="submit"
-							onClick={handleSubmit}
-							disabled={!firstName || !lastName || !username || !password}
+							onClick={handleSignUp}
+							disabled={!firstName || !lastName || !usernameSignUp || !passwordSignUp}
 						>
 							Sign Up
 						</Button>

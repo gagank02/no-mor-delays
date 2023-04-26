@@ -157,40 +157,6 @@ app.delete('/delays', function (req, res) {
 	});
 });
 
-//Adding flight to user's itinerary
-app.post('/itinerary', function (req, res) {
-	var userid_sql = `SELECT UserID FROM Users WHERE UserName="${req.body.username}";`;
-
-	connection.query(userid_sql, function (err, r) {
-		if (err) {
-			res.send(err);
-			return;
-		}
-
-		let user_id = r[0].UserID;
-		// console.log(user_id)
-
-		var sql = `INSERT INTO Itinerary (UserID, FlightNum, RelevantDate, ScheduledDepartureTime, OriginAirportIATACode, DestinationAirportIATACode) VALUES (${user_id}, ${req.body.flightnum}, "${req.body.date}", "${req.body.depttime}", "${req.body.origin}", "${req.body.dest}");`;
-		console.log(sql);
-		connection.query(sql, function (err, result) {
-			if (err) {
-				res.send(err);
-				return;
-			}
-			console.log(result)
-			if (result.affectedRows > 0) {
-				console.log('Succesfully Added Flight To Your Itinerary');
-				console.log(result);
-				res.json({ 'success': true, 'result': result })
-			} else {
-				console.log('Could Not Add Flight To Itinerary');
-				res.json({ 'success': false, 'result': 'Could Not Add Flight To Itinerary' })
-			}
-		});
-
-	});
-});
-
 /* endpoints for page 2 - advanced queries */
 // Average Delay by Airline of non-cancelled flights
 app.get('/adv1', function (req, res) {
@@ -444,6 +410,73 @@ app.get('/login', function (req, res) {
 			}
 		});
 	});
+});
+
+//Adding flight to user's itinerary
+app.post('/itinerary', function (req, res) {
+	var sql = `INSERT INTO Itinerary (UserID, FlightNum, RelevantDate, ScheduledDepartureTime, OriginAirportIATACode, DestinationAirportIATACode) 
+	VALUES (${req.body.userid}, ${req.body.flightnum}, "${req.body.date}", "${req.body.depttime}", "${req.body.origin}", "${req.body.dest}");`;
+	console.log(sql);
+	connection.query(sql, function (err, result) {
+		if (err) {
+			res.send(err);
+			return;
+		}
+		console.log(result)
+		if (result.affectedRows > 0) {
+			console.log('Succesfully Added Flight To Your Itinerary');
+			console.log(result);
+			res.json({ 'success': true, 'result': result })
+		} else {
+			console.log('Could Not Add Flight To Itinerary');
+			res.json({ 'success': false, 'result': 'Could Not Add Flight To Itinerary' })
+		}
+	});
+
+});
+
+app.get('/itinerary', function (req, res) {
+	var sql = `SELECT * FROM Itinerary WHERE UserID = ${req.query.user_id};`;
+	console.log(req.query)
+	console.log(sql);
+	connection.query(sql, function (err, result) {
+		if (err) {
+			res.send(err);
+			return;
+		}
+		console.log(result)
+		if (result[0] != null) {
+			console.log('Succesfully got all itineraries');
+			console.log(result);
+			res.json({ 'success': true, 'result': result })
+		} else {
+			console.log('Could Not get Itinerary');
+			res.json({ 'success': false, 'result': [] })
+		}
+	});
+
+});
+
+// Stored Procedure 
+app.get('/procedure', function (req, res) {
+	var requestIATA = req.query.IATA;
+
+	var sql = 'CALL Result("' + requestIATA + '")'; // procedure is Result(requestIATA VARCHAR(3))
+	console.log(sql);
+	connection.query(sql, function (err, result) {
+		if (err) {
+			res.send(err)
+			return;
+		}
+		console.log(result);
+		if (result[0] != null) {
+			console.log("Successfully ran stored procedure");
+			res.json({ 'success': true, 'result': result });
+		} else {
+			console.log('Failed run stored procedure');
+			res.json({ 'success': true, 'result': 'Failed Stored Procedure' });
+		}
+	})
 });
 
 app.get('/status', (req, res) => res.send('Working!'));

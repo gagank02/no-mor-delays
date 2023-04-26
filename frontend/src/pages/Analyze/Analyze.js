@@ -19,6 +19,7 @@ const Analyze = ({ airports }) => {
   const [AQ2Data, setAQ2Data] = useState([]);
   const [reliability, setReliability] = useState('Reliable');
   const [curAirport, setCurAirport] = useState("ORD");
+  const [curAirportReliability, setCurAirportReliability] = useState("ORD");
   const [isLoadingAQ1, setIsLoadingAQ1] = useState(false);
   const [isLoadingAQ2, setIsLoadingAQ2] = useState(false);
   const [isLoadingReliability, setIsLoadingReliability] = useState(false);
@@ -63,17 +64,17 @@ const Analyze = ({ airports }) => {
   const handleReliability = async () => {
     try {
       console.log(curAirport)
-      setIsLoadingAQ2(true);
-      const res = await axios.get("http://localhost:5001/adv2", { params: { airport: curAirport } });
+      setIsLoadingReliability(true);
+      const res = await axios.get(`http://localhost:5001/procedure?IATA=${curAirportReliability}`);
       if (res.data.success) {
-        setAQ2Data(res.data.result);
-        console.log(res.data.result);
+        setReliability(res.data.result[0][0].DelayRating);
+        console.log(res.data.result[0][0]);
 
       } else {
-        setAQ2Data([]);
-        console.log("failed aq2")
+        // setAQ2Data([]);
+        console.log("failed reliability")
       }
-      setIsLoadingAQ2(false);
+      setIsLoadingReliability(false);
     } catch (err) {
       console.error(err)
     }
@@ -123,12 +124,12 @@ const Analyze = ({ airports }) => {
           <Autocomplete
             options={aiportsIATA}
             getOptionLabel={(airport) => airport}
-            onChange={(event, value) => setCurAirport(value)}
+            onChange={(event, value) => setCurAirportReliability(value)}
             renderInput={(params) => (
               <TextField required {...params} label="Airport" variant="outlined" />
             )}
             sx={{ width: '150px' }}
-            value={curAirport || null}
+            value={curAirportReliability || null}
           />
           <Button onClick={handleReliability} variant='contained'>Find</Button>
         </div>

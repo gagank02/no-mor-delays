@@ -76,7 +76,7 @@ const FlightTableRow = ({ row, handleUpdate, deleteRow }) => {
 	const addFlight = async () => {
 		console.log(row);
 		let formData = {
-			"userid": user.UserId,
+			"userid": user.UserID,
 			"flightnum": row.FlightNum,
 			"date": row.Date,
 			"depttime": row.ScheduledDepartureTime,
@@ -90,7 +90,6 @@ const FlightTableRow = ({ row, handleUpdate, deleteRow }) => {
 		} else {
 			console.log("itineary not added");
 			setItineraryAddFail(true);
-
 		}
 	}
 
