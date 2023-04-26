@@ -1,14 +1,17 @@
 import { createContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const UserAuth = createContext();
 
 const UserAuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const navigate = useNavigate();
 
   const login = (userData) => {
     // Login user and set user state
-    setUser(userData)
+    setUser(userData);
+    navigate('/account');
   };
 
   // const login = async (username, password) => {
@@ -23,7 +26,8 @@ const UserAuthProvider = ({ children }) => {
 
   const logout = () => {
     // Logout user and set user state to null
-    setUser(null)
+    setUser(null);
+    navigate('/login');
   };
 
   const value = {

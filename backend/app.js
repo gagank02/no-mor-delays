@@ -157,6 +157,29 @@ app.delete('/delays', function (req, res) {
 	});
 });
 
+//Adding flight to user's itinerary
+app.post('/itinerary', function(req, res) {
+	// var userid = `SELECT UserID FROM Users WHERE UserName="${req.body.username}";`;
+	
+	var sql = `INSERT INTO Itinerary (UserID, FlightNum, RelevantDate, ScheduledDepartureTime, OriginAirportIATACode, DestinationAirportIATACode) VALUES (${req.body.userid}, ${req.body.flightnum}, "${req.body.date}", "${req.body.depttime}", "${req.body.origin}", "${req.body.dest}");`;
+	console.log(sql);
+	connection.query(sql, function(err, result) {
+		if (err) {
+			res.send(err);
+			return;
+		}
+		console.log(result)
+		if (result.affectedRows > 0) {
+			console.log('Succesfully Added Flight To Your Itinerary');
+			console.log(result);
+			res.json({'success': true, 'result': result})
+		} else {
+			console.log('Could Not Add Flight To Itinerary');
+			res.json({'success': false, 'result': 'Could Not Add Flight To Itinerary'})
+		}
+	});
+});
+
 /* endpoints for page 2 - advanced queries */
 // Average Delay by Airline of non-cancelled flights
 app.get('/adv1', function (req, res) {

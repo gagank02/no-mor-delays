@@ -43,7 +43,6 @@ function App() {
   }, [])
 
   return (
-    <Router>
       <div className="container">
         <Navbar />
         <Routes>
@@ -56,7 +55,6 @@ function App() {
           <Route path="/account" element={<Account />} />
         </Routes>
       </div>
-    </Router>
   );
 }
 
