@@ -13,7 +13,7 @@ DROP PROCEDURE Result;
 --   -- define and setup cursor --
 --   DECLARE curr CURSOR FOR (
 --     SELECT IATACode, AirportName, AVG(d.DepartureDelay) AS avgDepartureDelay
---     FROM Delays d JOIN Aiports a ON (d.OriginAirportIATACode = a.IATACode)
+--     FROM Delays d JOIN Airports a ON (d.OriginAirportIATACode = a.IATACode)
 --     WHERE d.IsCanceled LIKE 0
 --     GROUP BY d.OriginAirportIATACode
 --     HAVING d.OriginAirportIATACode = requestIATA;
@@ -78,13 +78,12 @@ BEGIN
   -- define and setup cursor --
   DECLARE curr CURSOR FOR (
     SELECT IATACode, AirportName, AVG(d.DepartureDelay) AS avgDepartureDelay
-    FROM Delays d JOIN Aiports a ON (d.OriginAirportIATACode = a.IATACode)
+    FROM Delays d JOIN Airports a ON (d.OriginAirportIATACode = a.IATACode)
     WHERE d.IsCanceled LIKE 0
     GROUP BY d.OriginAirportIATACode
     HAVING d.OriginAirportIATACode = requestIATA
   );
   
-
   -- declare cursor handler to figure out when cursor finishes --
   -- NOT FOUND is an event that is flagged when we are done reading records --
   DECLARE CONTINUE HANDLER FOR NOT FOUND SET exit_loop = TRUE; 
@@ -127,4 +126,4 @@ BEGIN
   FROM TmpTable
   ORDER BY DelayRating ASC;
   
-END
+END;
