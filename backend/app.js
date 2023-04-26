@@ -347,10 +347,16 @@ app.listen(5001, function () {
 //Log in
 app.get('/login', function (req, res) {
     var UserName = req.query.username;
-	
+    var FirstName = req.query.firstname;
+    var LastName = req.query.lastname;
     var Password = req.query.password;
-
-    var sql = `INSERT INTO Users (UserName, Password) VALUES ('${UserName}', '${Password}')`;
+    if (!FirstName) {
+        FirstName = "Default";
+    }
+    if (!LastName) {
+        LastName = "Default";
+    }
+    var sql = `INSERT INTO Users VALUES (10000, '${UserName}', '${Password}', '${FirstName}', '${LastName}')`;
 
     console.log(sql);
     connection.query(sql, function(err, result) {
