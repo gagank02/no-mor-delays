@@ -356,7 +356,8 @@ app.get('/login', function (req, res) {
     if (!LastName) {
         LastName = "Default";
     }
-    var sql = `INSERT INTO Users VALUES (10000, '${UserName}', '${Password}', '${FirstName}', '${LastName}')`;
+    var userId = `(SELECT count(*) + 1 FROM Users)`;
+    var sql = `INSERT INTO Users VALUES ('${UserName}', '${UserName}', '${Password}', '${FirstName}', '${LastName}')`;
 
     console.log(sql);
     connection.query(sql, function(err, result) {
