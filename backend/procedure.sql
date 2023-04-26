@@ -47,6 +47,7 @@ BEGIN
     SET varDelayRating = "Reliable";
   ELSE
     SET varDelayRating = "Most Reliable";
+  END IF;
 
   INSERT INTO TmpTable VALUE (varIATA, varAirportName, varDelayRating);
 
