@@ -341,3 +341,24 @@ app.set('port', process.env.PORT || 5001);
 app.listen(5001, function () {
 	console.log('Node app is running on port 5001');
 });
+
+
+
+//Log in
+app.get('/login', function (req, res) {
+    var UserName = req.query.username;
+	
+    var Password = req.query.password;
+
+    var sql = `INSERT INTO Users (UserName, Password) VALUES ('${UserName}', '${Password}')`;
+
+    console.log(sql);
+    connection.query(sql, function(err, result) {
+        if (err) {
+            res.send(err)
+            return;
+        } else {
+            res.json({success: true, result: result});
+        }
+    });
+});
