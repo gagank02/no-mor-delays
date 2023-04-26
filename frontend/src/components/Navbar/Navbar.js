@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { UserAuth } from "../UserAuth/UserAuth";
+import { Avatar, IconButton } from "@mui/material";
+import { AccountCircleOutlined } from "@mui/icons-material";
 import styles from './Navbar.module.css';
 
 const Navbar = () => {
@@ -16,6 +18,15 @@ const Navbar = () => {
 				<Link to="/analyze">Analyze</Link>
 				<Link to="/report">Report a Delay</Link>
 				<Link to="/visualize">Visualize</Link>
+				{user && (
+					<Link to="/account">
+						<IconButton>
+							<Avatar>
+								<AccountCircleOutlined />
+							</Avatar>
+						</IconButton>
+					</Link>
+				)}
 				{user
 					? (<Link onClick={logout} className={styles.logout}>Logout</Link>)
 					: (<Link to="/login" className={styles.login}>Login</Link>)
