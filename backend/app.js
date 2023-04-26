@@ -343,7 +343,6 @@ app.listen(5001, function () {
 });
 
 
-
 //Log in
 app.get('/login', function (req, res) {
     var UserName = req.query.username;
@@ -369,3 +368,27 @@ app.get('/login', function (req, res) {
         }
     });
 });
+
+// Stored Procedure 
+
+app.get('/procedure', function (req, res) {
+	var requestIATA = req.query.IATA;
+
+	var sql = 'CALL Result("'+requestIATA+'")'; // procedure is Result(requestIATA VARCHAR(3))
+	console.log(sql);
+	connection.query(sql, function(err, result) {
+			if (err) {
+					res.send(err)
+					return;
+			}
+			console.log(result);
+			if (result[0] != null) {
+					console.log("Successfully ran stored procedure");
+					res.json({'success': true, 'result': result});
+			} else {
+					console.log('Failed run stored procedure');
+					res.json({'success': true, 'result': 'Failed Stored Procedure'});
+			}
+	})
+});
+
