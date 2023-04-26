@@ -370,7 +370,6 @@ app.get('/login', function (req, res) {
 });
 
 // Stored Procedure 
-
 app.get('/procedure', function (req, res) {
 	var requestIATA = req.query.IATA;
 
