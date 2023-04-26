@@ -332,6 +332,174 @@ app.post('/delays', function (req, res) {
 	}
 });
 
+// EC: Visualize API
+app.get('/visualize', function (req, res) {
+	var sql = `
+	SELECT 
+		a.IATACode, 
+		a.AirportName, 
+		COUNT(*) AS totalDelays, 
+		AVG(d.DepartureDelay) as avgDelay,
+		LargeDelays.numLargeDelays
+	FROM 
+		Delays d JOIN Airports a ON d.OriginAirportIATACode = a.IATACode, 
+		(
+			SELECT a2.IATACode, COUNT(*) as numLargeDelays
+			FROM Delays d2 JOIN Airports a2 ON d2.OriginAirportIATACode = a2.IATACode
+			WHERE d2.DepartureDelay >= 15
+			GROUP BY a2.IATACode
+		) AS LargeDelays
+	WHERE a.IATACode = LargeDelays.IATACode
+	GROUP BY a.IATACode
+	ORDER BY a.IATACode
+  `
+
+	console.log(sql);
+	connection.query(sql, function (err, result) {
+		if (err) {
+			res.send(err)
+			return;
+		}
+
+		if (result[0] != null) {
+			console.log('Found Visualize Data');
+			console.log(result);
+			res.json({ 'success': true, 'result': result });
+		} else {
+			console.log('No Data Found for Visualize');
+			res.json({ 'success': false, 'result': 'No Visualize Data was found!' })
+		}
+	})
+});
+
+app.get('/login', function (req, res) {
+	console.log(req.query)
+	var UserName = req.query.UserName;
+	var FirstName = req.query.FirstName;
+	var LastName = req.query.LastName;
+	var Password = req.query.Password;
+	if (!FirstName) {
+		FirstName = "Default";
+	}
+	if (!LastName) {
+		LastName = "Default";
+	}
+
+	var userId_sql = `(SELECT count(*) as ID FROM Users)`;
+	connection.query(userId_sql, function (err, r) {
+		if (err) {
+			res.send(err)
+			return;
+		}
+
+		let userId = r[0].ID
+		console.log(userId)
+		var sql = `INSERT INTO Users VALUES ('${userId}', '${UserName}', '${Password}', '${FirstName}', '${LastName}')`;
+
+		console.log(sql);
+		connection.query(sql, function (err, result) {
+			if (err) {
+				if (err.sqlMessage == 'You Are Successfully Logged In') {
+					// console.log("here")
+					let getUserSQL = `SELECT * FROM Users WHERE UserName LIKE "${UserName}";`;
+					connection.query(getUserSQL, function (err, result2) {
+						if (result2[0] != null) {
+							console.log('Found User Data');
+							console.log(result2);
+							res.json({ 'success': true, 'result': result2 });
+						} else {
+							console.log('No Data Found for User');
+							res.json({ 'success': false, 'result': 'No User Data was found!' })
+						}
+					});
+				} else {
+					// console.log(err)
+					res.json({ 'success': false, 'result': 'No User Data was found!' })
+					return;
+				}
+			} else {
+				let getUserSQL = `SELECT * FROM Users WHERE UserName LIKE "${UserName}";;`;
+				connection.query(getUserSQL, function (err, result2) {
+					if (result2[0] != null) {
+						console.log('Found User Data');
+						console.log(result2);
+						res.json({ 'success': true, 'result': result2 });
+					} else {
+						console.log('No Data Found for User');
+						res.json({ 'success': false, 'result': 'No User Data was found!' })
+					}
+				});
+			}
+		});
+	});
+});
+
+//Adding flight to user's itinerary
+app.post('/itinerary', function (req, res) {
+	var sql = `INSERT INTO Itinerary (UserID, FlightNum, RelevantDate, ScheduledDepartureTime, OriginAirportIATACode, DestinationAirportIATACode) 
+	VALUES (${req.body.userid}, ${req.body.flightnum}, "${req.body.date}", "${req.body.depttime}", "${req.body.origin}", "${req.body.dest}");`;
+	console.log(sql);
+	connection.query(sql, function (err, result) {
+		if (err) {
+			res.send(err);
+			return;
+		}
+		console.log(result)
+		if (result.affectedRows > 0) {
+			console.log('Succesfully Added Flight To Your Itinerary');
+			console.log(result);
+			res.json({ 'success': true, 'result': result })
+		} else {
+			console.log('Could Not Add Flight To Itinerary');
+			res.json({ 'success': false, 'result': 'Could Not Add Flight To Itinerary' })
+		}
+	});
+
+});
+
+app.get('/itinerary', function (req, res) {
+	var sql = `SELECT * FROM Itinerary WHERE UserID = ${req.query.user_id};`;
+	console.log(req.query)
+	console.log(sql);
+	connection.query(sql, function (err, result) {
+		if (err) {
+			res.send(err);
+			return;
+		}
+		console.log(result)
+		if (result[0] != null) {
+			console.log('Succesfully got all itineraries');
+			console.log(result);
+			res.json({ 'success': true, 'result': result })
+		} else {
+			console.log('Could Not get Itinerary');
+			res.json({ 'success': false, 'result': [] })
+		}
+	});
+
+});
+
+// Stored Procedure 
+app.get('/procedure', function (req, res) {
+	var requestIATA = req.query.IATA;
+
+	var sql = 'CALL Result("' + requestIATA + '")'; // procedure is Result(requestIATA VARCHAR(3))
+	console.log(sql);
+	connection.query(sql, function (err, result) {
+		if (err) {
+			res.send(err)
+			return;
+		}
+		console.log(result);
+		if (result[0] != null) {
+			console.log("Successfully ran stored procedure");
+			res.json({ 'success': true, 'result': result });
+		} else {
+			console.log('Failed run stored procedure');
+			res.json({ 'success': true, 'result': 'Failed Stored Procedure' });
+		}
+	})
+});
 
 app.get('/status', (req, res) => res.send('Working!'));
 

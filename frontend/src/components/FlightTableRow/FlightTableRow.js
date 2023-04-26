@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useContext } from 'react'
 import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import Collapse from '@mui/material/Collapse';
@@ -9,22 +9,24 @@ import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
-import { Button } from '@mui/material';
+import { Button, Alert } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import DelayDetails from '../DelayDetails/DelayDetails';
 import DeleteDialog from '../DeleteDialog/DeleteDialog';
+import { UserAuth } from "../../components/UserAuth/UserAuth";
+import axios from 'axios';
 
 /** https://mui.com/material-ui/react-table/ */
 
 function formatDate(dateStr) {
-  const options = { 
-    month: 'long', 
-    day: 'numeric', 
-    year: 'numeric'
-  };
-  const date = new Date(dateStr);
-  return date.toLocaleString('en-US', options);
+	const options = {
+		month: 'long',
+		day: 'numeric',
+		year: 'numeric'
+	};
+	const date = new Date(dateStr);
+	return date.toLocaleString('en-US', options);
 }
 
 function formatTime(time) {
@@ -47,9 +49,13 @@ function calculateAdjustedTime(timeStr, departureDelay) {
 }
 
 const FlightTableRow = ({ row, handleUpdate, deleteRow }) => {
+	const { user, login, logout } = useContext(UserAuth);
 	const [open, setOpen] = useState(false);
 	const [isEditing, setIsEditing] = useState(false);
 	const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+
+	const [itineraryAddSuccess, setItineraryAddSuccess] = useState(false);
+	const [itineraryAddFail, setItineraryAddFail] = useState(false);
 
 	const handleEdit = () => {
 		console.log(row)
@@ -65,6 +71,26 @@ const FlightTableRow = ({ row, handleUpdate, deleteRow }) => {
 
 	const handleCloseDelete = () => {
 		setOpenDeleteDialog(false);
+	}
+
+	const addFlight = async () => {
+		console.log(row);
+		let formData = {
+			"userid": user.UserID,
+			"flightnum": row.FlightNum,
+			"date": row.Date,
+			"depttime": row.ScheduledDepartureTime,
+			"origin": row.OriginAirportIATACode,
+			"dest": row.DestinationAirportIATACode
+		}
+		const res = await axios.post("http://localhost:5001/itinerary", formData);
+		if (res.data.success) {
+			console.log("itineary added");
+			setItineraryAddSuccess(true);
+		} else {
+			console.log("itineary not added");
+			setItineraryAddFail(true);
+		}
 	}
 
 	return (
@@ -100,6 +126,13 @@ const FlightTableRow = ({ row, handleUpdate, deleteRow }) => {
 						})()
 					}
 				</TableCell>
+				{user && (
+					<TableCell>
+						<Button onClick={addFlight}>
+							Add Flight
+						</Button>
+					</TableCell>
+				)}
 			</TableRow>
 			<TableRow>
 				<TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
@@ -147,6 +180,32 @@ const FlightTableRow = ({ row, handleUpdate, deleteRow }) => {
 			)}
 			{openDeleteDialog && (
 				<DeleteDialog open={openDeleteDialog} handleClose={handleCloseDelete} handleDelete={handleDelete} />
+			)}
+			{itineraryAddSuccess && (
+				<Box style={{
+					position: 'absolute',
+					bottom: 0,
+					paddingBottom: '20px',
+					left: '50%',
+					transform: 'translate(-50%, -50%)',
+				}}>
+					<Alert severity='success' variant='filled' onClose={() => setItineraryAddSuccess(false)}>
+						Flight was added to your itineary!
+					</Alert>
+				</Box>
+			)}
+			{itineraryAddFail && (
+				<Box style={{
+					position: 'absolute',
+					bottom: 0,
+					paddingBottom: '20px',
+					left: '50%',
+					transform: 'translate(-50%, -50%)',
+				}}>
+					<Alert severity='error' variant='filled' onClose={() => setItineraryAddFail(false)}>
+						Error adding flight to itineary.
+					</Alert>
+				</Box>
 			)}
 		</>
 	);

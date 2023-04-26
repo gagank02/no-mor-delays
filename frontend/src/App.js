@@ -3,6 +3,9 @@ import Search from './pages/Search/Search';
 import Analyze from './pages/Analyze/Analyze';
 import Report from './pages/Report/Report';
 import Navbar from './components/Navbar/Navbar';
+import Login from './pages/Login/Login';
+import Visualize from './pages/Visualize/Visualize';
+import Account from './pages/Account/Account';
 import {
   BrowserRouter as Router,
   Routes,
@@ -10,6 +13,7 @@ import {
 } from "react-router-dom";
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+
 
 function App() {
   const [airports, setAirports] = useState([]);
@@ -39,7 +43,6 @@ function App() {
   }, [])
 
   return (
-    <Router>
       <div className="container">
         <Navbar />
         <Routes>
@@ -47,9 +50,11 @@ function App() {
           <Route path="/" element={<Search airports={airports}/>} />
           <Route path="/analyze" element={<Analyze airports={airports}/>} />
           <Route path="/report" element={<Report airports={airports} airlines={airlines}/>} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/visualize" element={<Visualize />} />
+          <Route path="/account" element={<Account />} />
         </Routes>
       </div>
-    </Router>
   );
 }
 

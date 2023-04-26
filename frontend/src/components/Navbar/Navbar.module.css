@@ -17,6 +17,7 @@
     text-decoration: none;
     padding-left: 10px;
 }
+
 .navbar__right {
     padding-right: 10px;
 }
@@ -32,17 +33,25 @@
 
 .navbar__right a:last-child {
     margin-right: 0;
-    
 }
 
-.loginButton {
-    background-color: lightblue;
-    border: none;
-    color: white;
-    padding: 8px 16px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    cursor: pointer;
+.navbar__right a:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+}
+
+.login {
+    color: green !important;
+}
+
+.login:hover {
+    color: rgb(3, 95, 3) !important;
+}
+
+.logout {
+    color: red !important;
+}
+
+.logout:hover {
+    color: rgb(161, 5, 5) !important;
 }
