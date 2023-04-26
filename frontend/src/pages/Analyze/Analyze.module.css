@@ -4,6 +4,7 @@
   align-items: flex-start;
   flex-direction: row;
   gap: 35px;
+  padding: 0 10px;
 }
 
 .column {

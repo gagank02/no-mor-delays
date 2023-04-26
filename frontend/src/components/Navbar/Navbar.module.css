@@ -35,6 +35,11 @@
     margin-right: 0;
 }
 
+.navbar__right a:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+}
+
 .login {
     color: green !important;
 }
