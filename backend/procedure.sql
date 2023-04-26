@@ -63,9 +63,8 @@ BEGIN
 
 END;
 
--- CREATE PROCEDURE `Result` (
-    IN requestIATA VARCHAR(3))
-
+-- CREATE DEFINER=`root`@`%` PROCEDURE `Result`(
+-- 	IN requestIATA VARCHAR(3))
 -- BEGIN
 --  -- define local vars -- 
 --   DECLARE varIATA VARCHAR(3);
@@ -74,6 +73,7 @@ END;
 --   -- declare vars to define --
 --   DECLARE varRegion VARCHAR(100);
 --   DECLARE varDelayRating VARCHAR(100);
+--   DECLARE exit_loop BOOLEAN DEFAULT FALSE;
 
 --   -- define and setup cursor --
 --   DECLARE curr CURSOR FOR (
@@ -84,6 +84,7 @@ END;
 --     HAVING d.OriginAirportIATACode = requestIATA
 --   );
   
+
 --   -- declare cursor handler to figure out when cursor finishes --
 --   -- NOT FOUND is an event that is flagged when we are done reading records --
 --   DECLARE CONTINUE HANDLER FOR NOT FOUND SET exit_loop = TRUE; 
