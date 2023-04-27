@@ -227,87 +227,88 @@ app.post('/delays', function (req, res) {
 	var delayCancellationReason = req.body.DelayCancellationReason;
 	var airlineIATA = req.body.AirlineIATA;
 
-	// Check if FlightNum exists in FlightRoutes
-	var checkFlightNumQuery = `SELECT * FROM FlightRoutes WHERE FlightNumber = ${flightNum}`;
-	connection.query(checkFlightNumQuery, function (err, rows, fields) {
+	// // Check if FlightNum exists in FlightRoutes
+	// var checkFlightNumQuery = `SELECT * FROM FlightRoutes WHERE FlightNumber = ${flightNum}`;
+	// connection.query(checkFlightNumQuery, function (err, rows, fields) {
+	// 	if (err) {
+	// 		console.log(err);
+	// 		res.send(err);
+	// 		return;
+	// 	}
+
+	// 	// If FlightNum does not exist, insert it
+	// 	if (rows.length == 0) {
+	// 		var insertFlightNumQuery = `
+    //             INSERT INTO FlightRoutes (
+    //                 FlightNumber,
+    //                 ScheduledDepartureTime,
+    //                 RelevantDate,
+    //                 AirlineIATA,
+    //                 ScheduledFlightDuration
+    //             ) VALUES (
+    //                 ${flightNum},
+    //                 '${scheduledDepartureTime}',
+    //                 '${date}',
+    //                 '${airlineIATA}',
+    //                 0
+    //             )
+    //         `;
+	// 		connection.query(insertFlightNumQuery, function (err, result) {
+	// 			if (err) {
+	// 				console.log(err);
+	// 				res.send(err);
+	// 				return;
+	// 			}
+	// 			console.log(`FlightNum ${flightNum} inserted successfully`);
+	// 			insertDelay();
+	// 		});
+	// 	} else {
+	// 		insertDelay();
+	// 	}
+	// });
+
+	// function insertDelay() {
+
+	var insertDelayQuery = `
+		INSERT INTO Delays (
+			FlightNum,
+			ScheduledDepartureTime,
+			Date,
+			OriginAirportIATACode,
+			DestinationAirportIATACode,
+			DepartureDelay,
+			IsCanceled,
+			DelayCancellationReason,
+			AirlineIATA
+		) VALUES (
+			${flightNum},
+			'${scheduledDepartureTime}',
+			'${date}',
+			'${originAirportIATACode}',
+			'${destinationAirportIATACode}',
+			${departureDelay},
+			${isCanceled},
+			${delayCancellationReason ? "'" + delayCancellationReason + "'" : null},
+			'${airlineIATA}'
+		)
+	`;
+	connection.query(insertDelayQuery, function (err, result) {
 		if (err) {
-			console.log(err);
+			console.log(err)
 			res.send(err);
 			return;
 		}
-
-		// If FlightNum does not exist, insert it
-		if (rows.length == 0) {
-			var insertFlightNumQuery = `
-                INSERT INTO FlightRoutes (
-                    FlightNumber,
-                    ScheduledDepartureTime,
-                    RelevantDate,
-                    AirlineIATA,
-                    ScheduledFlightDuration
-                ) VALUES (
-                    ${flightNum},
-                    '${scheduledDepartureTime}',
-                    '${date}',
-                    '${airlineIATA}',
-                    0
-                )
-            `;
-			connection.query(insertFlightNumQuery, function (err, result) {
-				if (err) {
-					console.log(err);
-					res.send(err);
-					return;
-				}
-				console.log(`FlightNum ${flightNum} inserted successfully`);
-				insertDelay();
-			});
+		console.log(result)
+		if (result.affectedRows === 1) {
+			console.log('Succesfully Inserted Delay');
+			console.log(result);
+			res.json({ 'success': true, 'result': result })
 		} else {
-			insertDelay();
+			console.log('Could not insert delay');
+			res.json({ 'success': false, 'result': 'Could not insert delay' })
 		}
 	});
-
-	function insertDelay() {
-		var insertDelayQuery = `
-            INSERT INTO Delays (
-                FlightNum,
-                ScheduledDepartureTime,
-                Date,
-                OriginAirportIATACode,
-                DestinationAirportIATACode,
-                DepartureDelay,
-                IsCanceled,
-                DelayCancellationReason,
-                AirlineIATA
-            ) VALUES (
-                ${flightNum},
-                '${scheduledDepartureTime}',
-                '${date}',
-                '${originAirportIATACode}',
-                '${destinationAirportIATACode}',
-                ${departureDelay},
-                ${isCanceled},
-                ${delayCancellationReason ? "'" + delayCancellationReason + "'" : null},
-                '${airlineIATA}'
-            )
-        `;
-		connection.query(insertDelayQuery, function (err, result) {
-			if (err) {
-				console.log(err)
-				res.send(err);
-				return;
-			}
-			console.log(result)
-			if (result.affectedRows === 1) {
-				console.log('Succesfully Inserted Delay');
-				console.log(result);
-				res.json({ 'success': true, 'result': result })
-			} else {
-				console.log('Could not insert delay');
-				res.json({ 'success': false, 'result': 'Could not insert delay' })
-			}
-		});
-	}
+// }
 });
 
 // EC: Visualize API
