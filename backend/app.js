@@ -425,7 +425,7 @@ app.post('/itinerary', function (req, res) {
 		console.log(result)
 		if (result.affectedRows > 0) {
 			console.log('Succesfully Added Flight To Your Itinerary');
-			console.log(result);
+			// console.log(result);
 			res.json({ 'success': true, 'result': result })
 		} else {
 			console.log('Could Not Add Flight To Itinerary');
@@ -447,7 +447,7 @@ app.get('/itinerary', function (req, res) {
 		console.log(result)
 		if (result[0] != null) {
 			console.log('Succesfully got all itineraries');
-			console.log(result);
+			// console.log(result);
 			res.json({ 'success': true, 'result': result })
 		} else {
 			console.log('Could Not get Itinerary');
@@ -478,6 +478,29 @@ app.get('/procedure', function (req, res) {
 		}
 	})
 });
+
+app.delete('/user', (req, res) => {
+	var sql = `
+		DELETE FROM Users
+		WHERE UserID = ${req.body.UserID};
+	`
+
+	connection.query(sql, function (err, result) {
+		if (err) {
+			res.send(err);
+			return;
+		}
+
+		if (result.affectedRows === 1) {
+			console.log('Succesfully Deleted User');
+			console.log(result);
+			res.json({ 'success': true, 'result': result })
+		} else {
+			console.log('Could Not Delete User');
+			res.json({ 'success': false, 'result': 'Could Not Delete User!' })
+		}
+	})
+})
 
 app.get('/status', (req, res) => res.send('Working!'));
 

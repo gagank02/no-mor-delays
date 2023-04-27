@@ -1,13 +1,13 @@
 import { useState, useEffect, useContext } from 'react'
 import { UserAuth } from '../../components/UserAuth/UserAuth';
-import { CircularProgress, Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
+import { CircularProgress, Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 
 
 const Account = () => {
-	const { user, login, logout } = useContext(UserAuth);
+	const { user, deleteUser } = useContext(UserAuth);
 	const [itineraries, setItineraries] = useState([]);
 	const [isLoading, setIsLoading] = useState(false);
 
@@ -33,6 +33,11 @@ const Account = () => {
 			fetchItineraries();
 		}
 	}, [user, navigate]);
+
+	const handleDelete = (event) => {
+		event.preventDefault();
+		deleteUser();
+	}
 
 	return (
 		<div>
@@ -87,6 +92,9 @@ const Account = () => {
 					) : (
 						<CircularProgress />
 					)}
+					<Button variant='contained' color='error' onClick={handleDelete}>
+						Delete Account
+					</Button>
 				</Box>
 			)}
 		</div>

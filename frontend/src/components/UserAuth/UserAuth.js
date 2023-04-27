@@ -53,6 +53,26 @@ const UserAuthProvider = ({ children }) => {
     }
   };
 
+  const deleteUser = async () => {
+    console.log("clicked")
+		try {
+			const response = await axios.delete(
+				`http://localhost:5001/user`, { data: user}
+			);
+      console.log(response.data)
+      if (response.data.success) {
+        console.log(response.data)
+        setUser(null);
+        navigate('/login');
+      } else {
+        console.log("error")
+      }
+			
+		} catch (error) {
+			console.error(error);
+		}
+	}
+
   const logout = () => {
     setUser(null);
     navigate('/login');
@@ -63,6 +83,7 @@ const UserAuthProvider = ({ children }) => {
     login,
     signUp,
     logout,
+    deleteUser
   };
 
   return <UserAuth.Provider value={value}>{children}</UserAuth.Provider>;
