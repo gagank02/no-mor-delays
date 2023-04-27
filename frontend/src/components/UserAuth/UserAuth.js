@@ -40,10 +40,14 @@ const UserAuthProvider = ({ children }) => {
           }
         }
       );
-      const user = response.data.result[0];
-      console.log(user);
-      setUser(user);
-      navigate('/account');
+      if (response.data.success) {
+        const user = response.data.result[0];
+        console.log(user);
+        setUser(user);
+        navigate('/account');
+      } else {
+        alert("Username is taken. Please try again.");
+      }
     } catch (error) {
       console.error(error);
     }
