@@ -33,7 +33,7 @@ BEGIN
 
   -- second adv query -- 
   -- finds the most reliable destination airport from user's chosen origin airport -- 
-  SELECT DestinationAirportIATACode as varBestDestination, AVG(d.DepartureDelay) AS dest_avg_delay
+  SELECT d.DestinationAirportIATACode as varBestDestination, AVG(d.DepartureDelay) AS dest_avg_delay
   FROM FlightPath f JOIN Delays d ON (f.DestinationAirportIATACode = d.DestinationAirportIATACode) AND (d.OriginAirportIATACode = requestIATA)
   WHERE d.IsCanceled LIKE 0 
   GROUP BY d.OriginAirportIATACode
