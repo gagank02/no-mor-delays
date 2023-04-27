@@ -17,7 +17,7 @@ const ORD = {
 const Analyze = ({ airports }) => {
   const [AQ1Data, setAQ1Data] = useState([]);
   const [AQ2Data, setAQ2Data] = useState([]);
-  const [reliability, setReliability] = useState('Reliable');
+  const [reliability, setReliability] = useState('');
   const [curAirport, setCurAirport] = useState("ORD");
   const [curAirportReliability, setCurAirportReliability] = useState("ORD");
   const [isLoadingAQ1, setIsLoadingAQ1] = useState(false);
@@ -135,7 +135,7 @@ const Analyze = ({ airports }) => {
         </div>
         <div>
           {!isLoadingReliability ? (
-            <ReliabilityBar reliability={reliability} />
+            (reliability && (<ReliabilityBar reliability={reliability} />))
           ) : <CircularProgress />}
         </div>
       </div>
