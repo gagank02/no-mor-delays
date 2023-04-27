@@ -108,7 +108,7 @@ const Report = ({ airports, airlines }) => {
           setShowAlert(false);
         }, 5000);
       } else {
-        console.log("error with updating");
+        console.log("error with reporting");
       }
     } catch (err) {
       console.error(err)

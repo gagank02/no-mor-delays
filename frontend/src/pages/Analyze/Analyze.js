@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Button, List, ListItem, ListItemText, Autocomplete, TextField, CircularProgress } from '@mui/material';
+import { Button, List, ListItem, ListItemText, Autocomplete, TextField, CircularProgress, Typography } from '@mui/material';
 import ReliabilityBar from '../../components/ReliabilityBar/ReliabilityBar';
 import axios from 'axios';
 
@@ -17,7 +17,7 @@ const ORD = {
 const Analyze = ({ airports }) => {
   const [AQ1Data, setAQ1Data] = useState([]);
   const [AQ2Data, setAQ2Data] = useState([]);
-  const [reliability, setReliability] = useState('');
+  const [reliabilityData, setReliabilityData] = useState(null);
   const [curAirport, setCurAirport] = useState("ORD");
   const [curAirportReliability, setCurAirportReliability] = useState("ORD");
   const [isLoadingAQ1, setIsLoadingAQ1] = useState(false);
@@ -67,7 +67,7 @@ const Analyze = ({ airports }) => {
       setIsLoadingReliability(true);
       const res = await axios.get(`http://localhost:5001/procedure?IATA=${curAirportReliability}`);
       if (res.data.success) {
-        setReliability(res.data.result[0][0].DelayRating);
+        setReliabilityData(res.data.result[0][0]);
         console.log(res.data.result[0][0]);
 
       } else {
@@ -135,8 +135,14 @@ const Analyze = ({ airports }) => {
         </div>
         <div>
           {!isLoadingReliability ? (
-            (reliability && (<ReliabilityBar reliability={reliability} />))
+            (reliabilityData && (<ReliabilityBar reliability={reliabilityData.DelayRating} />))
           ) : <CircularProgress />}
+          {reliabilityData && (
+            <div>
+              <Typography>Most Reliable Airline: {reliabilityData.Airline}</Typography>
+              <Typography>Avg. Delay: {reliabilityData.avgAirlineDepartureDelay} min</Typography>
+            </div>
+          )}
         </div>
       </div>
     </div>
