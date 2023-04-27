@@ -6,7 +6,7 @@ BEGIN
   DECLARE varAirportName VARCHAR(225);
   DECLARE varAvgDepartureDelay REAL;
   -- declare vars to define --
-  DECLARE varRegion VARCHAR(100);
+  DECLARE varBestDestination VARCHAR(100);
   DECLARE varDelayRating VARCHAR(100);
   DECLARE exit_loop BOOLEAN DEFAULT FALSE;
 
@@ -27,8 +27,20 @@ BEGIN
   CREATE Table TmpTable(
     AirportIATA VARCHAR(3) Primary Key,
     AirportName VARCHAR(225),
-    DelayRating VARCHAR(225)
+    DelayRating VARCHAR(225),
+    avgAirlineDepartureDelay VARCHAR(225),
+	AirLineCode VARCHAR(225),
+    Airline VARCHAR(225)
   );
+
+  -- second adv query -- 
+  -- finds the most reliable destination airport from user's chosen origin airport -- 
+  SELECT d.AirlineIATA as airLineCode, a.Airline as airline, AVG(d.DepartureDelay) AS avgAirlineDepartureDelay
+  FROM Delays d JOIN Airlines a ON (d.AirlineIATA = a.IATACode)
+  WHERE d.IsCanceled LIKE 0 AND d.OriginAirportIATACode = requestIATA
+  GROUP BY d.AirlineIATA
+  ORDER BY avgAirlineDepartureDelay
+  LIMIT 15;
 
   -- create loop structure to iterate through records -- 
   OPEN curr;
@@ -49,7 +61,7 @@ BEGIN
 		SET varDelayRating = "Most Reliable";
 	  END IF;
 
-	  INSERT INTO TmpTable VALUE (varIATA, varAirportName, varDelayRating);
+	  INSERT INTO TmpTable VALUE (varIATA, varAirportName, varDelayRating, avgAirlineDepartureDelay, airLineCode, airline);
 
   END LOOP cloop;
 
@@ -57,8 +69,7 @@ BEGIN
   CLOSE curr; 
 
   -- obtain desired output -- 
-  SELECT AirportIATA, AirportName, DelayRating
-  FROM TmpTable
-  ORDER BY DelayRating ASC;
+  -- should return IATA, airport name, delay rating, best destination airport --
+  SELECT * FROM TmpTable;
   
-END;
+END
