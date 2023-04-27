@@ -9,7 +9,10 @@ BEGIN
   DECLARE varBestDestination VARCHAR(100);
   DECLARE varDelayRating VARCHAR(100);
   DECLARE exit_loop BOOLEAN DEFAULT FALSE;
-
+  DECLARE airLineCode VARCHAR(100);
+  DECLARE airline VARCHAR(100);
+  DECLARE avgAirlineDepartureDelay FLOAT;
+	
   -- define and setup cursor --
   DECLARE curr CURSOR FOR (
     SELECT IATACode, AirportName, AVG(d.DepartureDelay) AS avgDepartureDelay
@@ -28,19 +31,20 @@ BEGIN
     AirportIATA VARCHAR(3) Primary Key,
     AirportName VARCHAR(225),
     DelayRating VARCHAR(225),
-    avgAirlineDepartureDelay VARCHAR(225),
+    avgAirlineDepartureDelay FLOAT,
 	AirLineCode VARCHAR(225),
     Airline VARCHAR(225)
   );
 
   -- second adv query -- 
   -- finds the most reliable destination airport from user's chosen origin airport -- 
-  SELECT d.AirlineIATA as airLineCode, a.Airline as airline, AVG(d.DepartureDelay) AS avgAirlineDepartureDelay
+  SELECT d.AirlineIATA, a.Airline, AVG(d.DepartureDelay)
+  INTO airLineCode, airline, avgAirlineDepartureDelay
   FROM Delays d JOIN Airlines a ON (d.AirlineIATA = a.IATACode)
   WHERE d.IsCanceled LIKE 0 AND d.OriginAirportIATACode = requestIATA
   GROUP BY d.AirlineIATA
   ORDER BY avgAirlineDepartureDelay
-  LIMIT 15;
+  LIMIT 1;
 
   -- create loop structure to iterate through records -- 
   OPEN curr;
